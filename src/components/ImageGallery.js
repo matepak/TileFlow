@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './ImageGallery.css'; // We'll create this CSS file separately
 
 const ImageGallery = () => {
@@ -133,7 +133,7 @@ const ImageGallery = () => {
     };
 
     // Sort images based on current sorting settings
-    const sortImages = (imagesToSort) => {
+    const sortImages = useCallback((imagesToSort) => {
         if (imagesToSort.length <= 1) return imagesToSort;
 
         const { type, direction } = layoutSettings.sorting;
@@ -159,7 +159,7 @@ const ImageGallery = () => {
         });
 
         return sortedImages;
-    };
+    }, [layoutSettings.sorting]);
 
     // Calculate row-based layout when images or container width change
     useEffect(() => {
@@ -200,7 +200,9 @@ const ImageGallery = () => {
         layoutSettings.forceImagesPerRow.enabled,
         layoutSettings.forceImagesPerRow.count,
         layoutSettings.sorting.type,
-        layoutSettings.sorting.direction
+        layoutSettings.sorting.direction,
+        sortImages,
+        images
     ]);
 
     // Fixed images per row layout algorithm
@@ -333,9 +335,6 @@ const ImageGallery = () => {
                     : targetHeight;
             });
 
-            // Get the tallest effective height in the row
-            const maxEffectiveHeight = Math.max(...rowImages.map(img => img.effectiveHeight));
-
             // Calculate widths based on aspect ratios and effective heights
             rowImages.forEach(img => {
                 img.naturalWidth = img.aspectRatio * img.effectiveHeight;
@@ -377,8 +376,6 @@ const ImageGallery = () => {
                     : targetHeight;
             });
 
-            // Get the tallest effective height in the row
-            const maxEffectiveHeight = Math.max(...rowImages.map(img => img.effectiveHeight));
 
             // Calculate widths based on aspect ratios and effective heights
             rowImages.forEach(img => {
@@ -651,7 +648,7 @@ const ImageGallery = () => {
                 }
             });
         };
-    }, []);
+    }, [images]);
 
     // Layout Settings Handlers
     const handleRowHeightChange = (e) => {
