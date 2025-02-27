@@ -166,7 +166,10 @@ const ImageGallery = () => {
         if (images.length === 0 || containerWidth === 0) return;
 
         // First sort the images
-        const sortedImages = sortImages(images);
+        const sortedImages = sortImages([...images]);
+
+        // Check if any images have no layout (typically newly uploaded images)
+        const needsLayout = sortedImages.some(img => img.displayWidth === 0 && img.displayHeight === 0);
 
         // Then calculate the layout based on whether we're forcing images per row
         let layoutResult;
@@ -189,9 +192,27 @@ const ImageGallery = () => {
             );
         }
 
-        setImages(layoutResult);
+        // Only update images if they need layout or the layout actually changed
+        setImages(prevImages => {
+            // If newly uploaded images need layout, always update
+            if (needsLayout) {
+                return layoutResult;
+            }
+
+            // For existing images, check if layout changed
+            // Skip stringification to avoid performance issues with large arrays
+            const layoutChanged = prevImages.some((img, idx) => {
+                const layoutImg = layoutResult[idx];
+                return !layoutImg ||
+                    img.displayWidth !== layoutImg.displayWidth ||
+                    img.displayHeight !== layoutImg.displayHeight ||
+                    img.rowIndex !== layoutImg.rowIndex;
+            });
+
+            return layoutChanged ? layoutResult : prevImages;
+        });
     }, [
-        images.length,
+        images, // We need this dependency to detect new uploads
         containerWidth,
         layoutSettings.rowHeight,
         layoutSettings.imageSpacing,
@@ -201,8 +222,7 @@ const ImageGallery = () => {
         layoutSettings.forceImagesPerRow.count,
         layoutSettings.sorting.type,
         layoutSettings.sorting.direction,
-        sortImages,
-        images
+        sortImages
     ]);
 
     // Fixed images per row layout algorithm
@@ -502,44 +522,72 @@ const ImageGallery = () => {
                 for (let imgIndex = 0; imgIndex < rowImages.length; imgIndex++) {
                     const img = rowImages[imgIndex];
 
-                    // Draw the image
-                    const imgElement = await loadImage(img.src);
-                    ctx.drawImage(
-                        imgElement,
-                        xOffset,
-                        yOffset,
-                        img.displayWidth,
-                        img.displayHeight
-                    );
+                    try {
+                        // Use the gallery element's images directly instead of loading from blob URLs
+                        const imgElement = document.querySelector(`img[src="${img.src}"]`);
 
-                    // Draw label if enabled
-                    if (layoutSettings.labels.enabled && img.label) {
-                        const labelPadding = layoutSettings.labels.padding;
-                        const fontSize = layoutSettings.labels.fontSize;
+                        if (imgElement) {
+                            // Use existing image element
+                            ctx.drawImage(
+                                imgElement,
+                                xOffset,
+                                yOffset,
+                                img.displayWidth,
+                                img.displayHeight
+                            );
+                        } else {
+                            // Fallback to loading the image
+                            const loadedImg = await loadImage(img.src);
+                            ctx.drawImage(
+                                loadedImg,
+                                xOffset,
+                                yOffset,
+                                img.displayWidth,
+                                img.displayHeight
+                            );
+                        }
 
-                        // Set up text styling
-                        ctx.font = `${fontSize}px Arial, sans-serif`;
-                        ctx.textBaseline = 'top';
+                        // Draw label if enabled
+                        if (layoutSettings.labels.enabled && img.label) {
+                            const labelPadding = layoutSettings.labels.padding;
+                            const fontSize = layoutSettings.labels.fontSize;
 
-                        // Measure text width
-                        const textWidth = ctx.measureText(img.label).width;
-                        const labelWidth = textWidth + (labelPadding * 2);
-                        const labelHeight = fontSize + (labelPadding * 2);
+                            // Set up text styling
+                            ctx.font = `${fontSize}px Arial, sans-serif`;
+                            ctx.textBaseline = 'top';
 
-                        // Draw label background
-                        ctx.fillStyle = hexToRgba(
-                            layoutSettings.labels.backgroundColor,
-                            layoutSettings.labels.backgroundOpacity
-                        );
-                        ctx.fillRect(xOffset, yOffset, labelWidth, labelHeight);
+                            // Measure text width
+                            const textWidth = ctx.measureText(img.label).width;
+                            const labelWidth = textWidth + (labelPadding * 2);
+                            const labelHeight = fontSize + (labelPadding * 2);
 
-                        // Draw label text
-                        ctx.fillStyle = layoutSettings.labels.fontColor;
-                        ctx.fillText(
-                            img.label,
-                            xOffset + labelPadding,
-                            yOffset + labelPadding
-                        );
+                            // Draw label background
+                            ctx.fillStyle = hexToRgba(
+                                layoutSettings.labels.backgroundColor,
+                                layoutSettings.labels.backgroundOpacity
+                            );
+                            ctx.fillRect(xOffset, yOffset, labelWidth, labelHeight);
+
+                            // Draw label text
+                            ctx.fillStyle = layoutSettings.labels.fontColor;
+                            ctx.fillText(
+                                img.label,
+                                xOffset + labelPadding,
+                                yOffset + labelPadding
+                            );
+                        }
+                    } catch (imgError) {
+                        console.error(`Error drawing image at row ${rowIndex}, index ${imgIndex}:`, imgError);
+                        // Draw a placeholder for the failed image
+                        ctx.fillStyle = "#f0f0f0";
+                        ctx.fillRect(xOffset, yOffset, img.displayWidth, img.displayHeight);
+                        ctx.strokeStyle = "#cccccc";
+                        ctx.strokeRect(xOffset, yOffset, img.displayWidth, img.displayHeight);
+
+                        // Draw error text
+                        ctx.fillStyle = "#ff0000";
+                        ctx.font = "14px Arial, sans-serif";
+                        ctx.fillText("Image failed to load", xOffset + 10, yOffset + (img.displayHeight / 2));
                     }
 
                     // Update x offset for next image
@@ -585,8 +633,12 @@ const ImageGallery = () => {
     const loadImage = (src) => {
         return new Promise((resolve, reject) => {
             const img = new Image();
+            img.crossOrigin = "anonymous"; // Add cross-origin attribute to handle CORS
             img.onload = () => resolve(img);
-            img.onerror = reject;
+            img.onerror = (error) => {
+                console.error(`Failed to load image: ${src}`, error);
+                reject(new Error(`Failed to load image: ${src}`));
+            };
             img.src = src;
         });
     };
@@ -644,11 +696,12 @@ const ImageGallery = () => {
         return () => {
             images.forEach(image => {
                 if (image.src) {
+                    // Only revoke URLs when component is unmounting, not on every update
                     URL.revokeObjectURL(image.src);
                 }
             });
         };
-    }, [images]);
+    }, []); // Empty dependency array so this only runs on unmount
 
     // Layout Settings Handlers
     const handleRowHeightChange = (e) => {
