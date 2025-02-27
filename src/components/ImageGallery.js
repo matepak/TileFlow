@@ -67,6 +67,7 @@ const ImageGallery = () => {
 
         setIsLoading(true);
         const newImages = [];
+        const rejectedFiles = []; // Track rejected files
         const existingIds = images.map(img => img.id);
         let nextId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 1;
 
@@ -75,6 +76,7 @@ const ImageGallery = () => {
             return new Promise((resolve) => {
                 // Only process image files
                 if (!file.type.startsWith('image/')) {
+                    rejectedFiles.push(file.name); // Add to rejected files
                     resolve(null);
                     return;
                 }
@@ -114,6 +116,15 @@ const ImageGallery = () => {
         const updatedImages = [...images, ...newImages];
         setImages(updatedImages);
         setIsLoading(false);
+
+        // Display message about rejected files if any
+        if (rejectedFiles.length > 0) {
+            const rejectedMessage = rejectedFiles.length === 1
+                ? `File "${rejectedFiles[0]}" was not an image and was skipped.`
+                : `${rejectedFiles.length} files were not images and were skipped: ${rejectedFiles.slice(0, 3).join(", ")}${rejectedFiles.length > 3 ? ` and ${rejectedFiles.length - 3} more` : ""}.`;
+
+            alert(rejectedMessage);
+        }
 
         // Reset file input
         if (fileInputRef.current) {
