@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './ImageGallery.css'; // We'll create this CSS file separately
+import SaveGalleryImage, { saveGalleryAsImage } from './SaveGalleryImage';
+import { hexToRgba } from '../utils/imageUtils';
 
 const ImageGallery = () => {
     const [images, setImages] = useState([]);
@@ -26,6 +28,9 @@ const ImageGallery = () => {
             backgroundColor: '#000000',
             backgroundOpacity: 0.7,
             padding: 6
+        },
+        export: {
+            dpi: 96
         }
     });
     const [isLoading, setIsLoading] = useState(false);
@@ -461,188 +466,6 @@ const ImageGallery = () => {
         return imagesCopy;
     };
 
-    // Save the gallery as a composite image
-    const saveGalleryAsImage = async () => {
-        if (!galleryRef.current || images.length === 0) return;
-
-        setIsSaving(true);
-
-        try {
-            // Calculate the total height of the gallery
-            let totalHeight = 0;
-            let maxRowWidth = 0;
-
-            // Group images by row
-            const imagesByRow = images.reduce((acc, image) => {
-                const rowIndex = image.rowIndex || 0;
-                if (!acc[rowIndex]) acc[rowIndex] = [];
-                acc[rowIndex].push(image);
-                return acc;
-            }, {});
-
-            // Calculate dimensions
-            Object.entries(imagesByRow).forEach(([rowIndex, rowImages], index) => {
-                const rowHeight = Math.max(...rowImages.map(img => img.displayHeight));
-                totalHeight += rowHeight;
-
-                // Add row spacing if not the last row
-                if (index < Object.keys(imagesByRow).length - 1) {
-                    totalHeight += layoutSettings.rowSpacing;
-                }
-
-                // Calculate row width
-                const rowWidth = rowImages.reduce((sum, img, imgIndex) => {
-                    return sum + img.displayWidth + (imgIndex < rowImages.length - 1 ? layoutSettings.imageSpacing : 0);
-                }, 0);
-
-                maxRowWidth = Math.max(maxRowWidth, rowWidth);
-            });
-
-            // Create a canvas with the calculated dimensions
-            const canvas = document.createElement('canvas');
-            canvas.width = maxRowWidth;
-            canvas.height = totalHeight;
-
-            // Get the canvas context
-            const ctx = canvas.getContext('2d');
-
-            // Fill background
-            ctx.fillStyle = layoutSettings.backgroundColor;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Draw each image on the canvas
-            let yOffset = 0;
-
-            // Process each row
-            for (let rowIndex = 0; rowIndex < Object.keys(imagesByRow).length; rowIndex++) {
-                const rowImages = imagesByRow[rowIndex] || [];
-                let xOffset = 0;
-
-                // Draw each image in the row
-                for (let imgIndex = 0; imgIndex < rowImages.length; imgIndex++) {
-                    const img = rowImages[imgIndex];
-
-                    try {
-                        // Use the gallery element's images directly instead of loading from blob URLs
-                        const imgElement = document.querySelector(`img[src="${img.src}"]`);
-
-                        if (imgElement) {
-                            // Use existing image element
-                            ctx.drawImage(
-                                imgElement,
-                                xOffset,
-                                yOffset,
-                                img.displayWidth,
-                                img.displayHeight
-                            );
-                        } else {
-                            // Fallback to loading the image
-                            const loadedImg = await loadImage(img.src);
-                            ctx.drawImage(
-                                loadedImg,
-                                xOffset,
-                                yOffset,
-                                img.displayWidth,
-                                img.displayHeight
-                            );
-                        }
-
-                        // Draw label if enabled
-                        if (layoutSettings.labels.enabled && img.label) {
-                            const labelPadding = layoutSettings.labels.padding;
-                            const fontSize = layoutSettings.labels.fontSize;
-
-                            // Set up text styling
-                            ctx.font = `${fontSize}px Arial, sans-serif`;
-                            ctx.textBaseline = 'top';
-
-                            // Measure text width
-                            const textWidth = ctx.measureText(img.label).width;
-                            const labelWidth = textWidth + (labelPadding * 2);
-                            const labelHeight = fontSize + (labelPadding * 2);
-
-                            // Draw label background
-                            ctx.fillStyle = hexToRgba(
-                                layoutSettings.labels.backgroundColor,
-                                layoutSettings.labels.backgroundOpacity
-                            );
-                            ctx.fillRect(xOffset, yOffset, labelWidth, labelHeight);
-
-                            // Draw label text
-                            ctx.fillStyle = layoutSettings.labels.fontColor;
-                            ctx.fillText(
-                                img.label,
-                                xOffset + labelPadding,
-                                yOffset + labelPadding
-                            );
-                        }
-                    } catch (imgError) {
-                        console.error(`Error drawing image at row ${rowIndex}, index ${imgIndex}:`, imgError);
-                        // Draw a placeholder for the failed image
-                        ctx.fillStyle = "#f0f0f0";
-                        ctx.fillRect(xOffset, yOffset, img.displayWidth, img.displayHeight);
-                        ctx.strokeStyle = "#cccccc";
-                        ctx.strokeRect(xOffset, yOffset, img.displayWidth, img.displayHeight);
-
-                        // Draw error text
-                        ctx.fillStyle = "#ff0000";
-                        ctx.font = "14px Arial, sans-serif";
-                        ctx.fillText("Image failed to load", xOffset + 10, yOffset + (img.displayHeight / 2));
-                    }
-
-                    // Update x offset for next image
-                    xOffset += img.displayWidth + layoutSettings.imageSpacing;
-                }
-
-                // Update y offset for next row
-                yOffset += Math.max(...rowImages.map(img => img.displayHeight)) + layoutSettings.rowSpacing;
-            }
-
-            // Convert canvas to a downloadable image
-            const dataUrl = canvas.toDataURL('image/png');
-
-            // Create a download link
-            const downloadLink = document.createElement('a');
-            downloadLink.href = dataUrl;
-            downloadLink.download = `image-gallery-${Date.now()}.png`;
-
-            // Trigger download
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-
-        } catch (error) {
-            console.error('Error saving gallery:', error);
-            alert('There was an error saving the gallery. Please try again.');
-        } finally {
-            setIsSaving(false);
-        }
-    };
-
-    // Helper function to convert hex to rgba
-    const hexToRgba = (hex, opacity) => {
-        hex = hex.replace('#', '');
-        const r = parseInt(hex.substring(0, 2), 16);
-        const g = parseInt(hex.substring(2, 4), 16);
-        const b = parseInt(hex.substring(4, 6), 16);
-
-        return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-    };
-
-    // Helper function to load an image and return a promise
-    const loadImage = (src) => {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.crossOrigin = "anonymous"; // Add cross-origin attribute to handle CORS
-            img.onload = () => resolve(img);
-            img.onerror = (error) => {
-                console.error(`Failed to load image: ${src}`, error);
-                reject(new Error(`Failed to load image: ${src}`));
-            };
-            img.src = src;
-        });
-    };
-
     // Save the current layout configuration as JSON
     const saveLayoutConfiguration = () => {
         if (images.length === 0) return;
@@ -810,10 +633,19 @@ const ImageGallery = () => {
     };
 
     const handleLabelOpacityChange = (e) => {
-        const backgroundOpacity = parseFloat(e.target.value);
+        const opacity = parseFloat(e.target.value);
         setLayoutSettings({
             ...layoutSettings,
-            labels: { ...layoutSettings.labels, backgroundOpacity }
+            labels: { ...layoutSettings.labels, backgroundOpacity: opacity }
+        });
+    };
+
+    // Export Settings Handlers
+    const handleDpiChange = (e) => {
+        const dpi = parseInt(e.target.value, 10);
+        setLayoutSettings({
+            ...layoutSettings,
+            export: { ...layoutSettings.export, dpi }
         });
     };
 
@@ -834,6 +666,11 @@ const ImageGallery = () => {
         acc[rowIndex].push(image);
         return acc;
     }, {});
+
+    // Replace the saveGalleryAsImage function with a call to the imported function
+    const handleSaveGallery = () => {
+        saveGalleryAsImage(galleryRef, images, layoutSettings, setIsSaving);
+    };
 
     return (
         <div className="gallery-container">
@@ -1104,13 +941,70 @@ const ImageGallery = () => {
                 {/* Export Panel */}
                 {activeTab === 'export' && (
                     <div className="panel-content">
-                        <button
-                            onClick={saveGalleryAsImage}
-                            className="action-button export-button"
-                            disabled={isSaving || images.length === 0}
-                        >
-                            {isSaving ? 'Creating image...' : 'Save as Image'}
-                        </button>
+                        <div className="setting-group">
+                            <h3 className="setting-title">Image Export Settings</h3>
+
+                            <div className="setting-item">
+                                <label htmlFor="dpi-setting">DPI Resolution:</label>
+                                <input
+                                    id="dpi-setting"
+                                    type="range"
+                                    min="72"
+                                    max="600"
+                                    step="1"
+                                    value={layoutSettings.export.dpi}
+                                    onChange={handleDpiChange}
+                                />
+                                <span className="setting-value">{layoutSettings.export.dpi} DPI</span>
+                            </div>
+
+                            <div className="dpi-presets">
+                                <button
+                                    className={`preset-button ${layoutSettings.export.dpi === 72 ? 'active' : ''}`}
+                                    onClick={() => handleDpiChange({ target: { value: '72' } })}
+                                >
+                                    72 DPI
+                                    <span className="preset-description">Web/Screen</span>
+                                </button>
+                                <button
+                                    className={`preset-button ${layoutSettings.export.dpi === 150 ? 'active' : ''}`}
+                                    onClick={() => handleDpiChange({ target: { value: '150' } })}
+                                >
+                                    150 DPI
+                                    <span className="preset-description">Basic Print</span>
+                                </button>
+                                <button
+                                    className={`preset-button ${layoutSettings.export.dpi === 300 ? 'active' : ''}`}
+                                    onClick={() => handleDpiChange({ target: { value: '300' } })}
+                                >
+                                    300 DPI
+                                    <span className="preset-description">Quality Print</span>
+                                </button>
+                                <button
+                                    className={`preset-button ${layoutSettings.export.dpi === 600 ? 'active' : ''}`}
+                                    onClick={() => handleDpiChange({ target: { value: '600' } })}
+                                >
+                                    600 DPI
+                                    <span className="preset-description">Professional</span>
+                                </button>
+                            </div>
+
+                            <div className="export-info">
+                                <p className="info-text">
+                                    Higher DPI will result in larger, more detailed images suitable for printing.
+                                    Lower DPI is better for web or screen viewing.
+                                </p>
+                            </div>
+                        </div>
+
+                        <SaveGalleryImage
+                            galleryRef={galleryRef}
+                            images={images}
+                            layoutSettings={layoutSettings}
+                            isSaving={isSaving}
+                            setIsSaving={setIsSaving}
+                            dpi={layoutSettings.export.dpi}
+                        />
 
                         <button
                             onClick={saveLayoutConfiguration}
@@ -1123,9 +1017,6 @@ const ImageGallery = () => {
                         <div className="export-info">
                             <p className="info-text">
                                 The "Save as Image" option will create a PNG file of your gallery layout, including all images, spacing, and labels.
-                            </p>
-                            <p className="info-text">
-                                The "Save Configuration" option will save your current layout settings as a JSON file.
                             </p>
                         </div>
                     </div>
