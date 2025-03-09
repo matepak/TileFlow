@@ -410,3 +410,37 @@
     width: 70%;
     margin-right: 10px;
 }
+
+/* Remove Image Button */
+.remove-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+    z-index: 20;
+    padding: 0;
+}
+
+.image-container:hover .remove-image {
+    opacity: 1;
+}
+
+.remove-image:hover {
+    background-color: rgba(255, 0, 0, 0.9);
+}
+
+.remove-icon {
+    width: 16px;
+    height: 16px;
+}

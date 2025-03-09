@@ -659,6 +659,24 @@ const ImageGallery = () => {
         setImages([]);
     };
 
+    const removeImage = (e) => {
+        e.stopPropagation(); // Prevent event bubbling to parent elements
+
+        // Find the closest button that has the data-id attribute
+        const button = e.target.closest('.remove-image');
+        if (!button) return;
+
+        const imageId = button.getAttribute('data-id');
+        if (!imageId) {
+            console.error('Image ID not found');
+            return;
+        }
+
+        console.log('Removing image with ID:', imageId);
+        // Convert both IDs to strings to ensure consistent comparison
+        setImages(prevImages => prevImages.filter(img => String(img.id) !== String(imageId)));
+    };
+
     // Group images by row for rendering
     const imagesByRow = images.reduce((acc, image) => {
         const rowIndex = image.rowIndex || 0;
@@ -1125,6 +1143,17 @@ const ImageGallery = () => {
                                                 {image.label}
                                             </div>
                                         )}
+
+                                        {/* Remove Image */}
+                                        <button
+                                            className="remove-image"
+                                            onClick={removeImage}
+                                            data-id={image.id}
+                                        >
+                                            <svg className="remove-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
 
                                         {/* Hover Info */}
                                         <div className="image-info">
