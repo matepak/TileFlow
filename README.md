@@ -84,14 +84,6 @@ TileFlow is built with modern web technologies:
 
 The layout engine uses advanced algorithms to calculate optimal image placement based on aspect ratios and target dimensions, ensuring visually pleasing results.
 
-## Browser Compatibility
-
-TileFlow works in all modern browsers:
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
