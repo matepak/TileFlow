@@ -1,9 +1,9 @@
-name: Deploy to Cyberfolks via FTPS
+name: Deploy to CyberFolks via lftp
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   build-and-deploy:
@@ -24,21 +24,43 @@ jobs:
         
       - name: Run tests
         run: npm test
-        continue-on-error: true
+        continue-on-error: true  # Continue deployment even if tests fail
         
       - name: Build project
         run: npm run build
         
-      - name: Deploy to Cyberfolks via FTPS
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: s113.cyber-folks.pl
-          username: ${{ secrets.CYBERFOLKS_FTP_USERNAME }}
-          password: ${{ secrets.CYBERFOLKS_FTP_PASSWORD }}
-          local-dir: ./build/
-          server-dir: /domains/webgrove.pl/public_html/apps/tiling_img/
-          protocol: ftps-legacy
-          port: 21
-          timeout: 90000
-          log-level: verbose
-          dangerous-clean-slate: true
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+        
+      - name: Deploy via lftp
+        run: |
+          # Add verbose debugging to see connection details
+          lftp -d -e "
+          # Set general options
+          set net:timeout 60;
+          set net:max-retries 3;
+          set net:reconnect-interval-base 5;
+          
+          # Disable SSL for regular FTP
+          set ftp:ssl-allow no;
+          
+          # Connect to server
+          open s113.cyber-folks.pl;
+          
+          # Login
+          user ${{ secrets.CYBERFOLKS_FTP_USERNAME }} ${{ secrets.CYBERFOLKS_FTP_PASSWORD }};
+          
+          # Show remote directory to verify connection
+          ls -la;
+          
+          # Upload files with mirror (sync) - only upload what has changed
+          mirror --reverse --delete --verbose ./build/ /domains/webgrove.pl/public_html/apps/tiling_img/;
+          
+          # Exit
+          quit"
+        env:
+          # Set environment variables for better security
+          LFTP_PASSWORD: ${{ secrets.CYBERFOLKS_FTP_PASSWORD }}
+
+      - name: Deployment status
+        run: echo "Deployment completed. Check logs for any transfer errors."
