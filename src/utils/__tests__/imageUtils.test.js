@@ -1,4 +1,5 @@
 import { loadImage } from '../imageUtils';
+import { hexToRgba } from '../imageUtils';
 
 describe('loadImage', () => {
     let originalImage;
@@ -41,5 +42,32 @@ describe('loadImage', () => {
 
         // Test that the promise rejects with any value
         return expect(imagePromise).rejects.toBeTruthy();
+    });
+});
+
+describe('hexToRgba', () => {
+    it('should convert black hex to rgba', () => {
+        const result = hexToRgba('#000000', 1);
+        expect(result).toBe('rgba(0, 0, 0, 1)');
+    });
+
+    it('should convert white hex to rgba', () => {
+        const result = hexToRgba('#FFFFFF', 1);
+        expect(result).toBe('rgba(255, 255, 255, 1)');
+    });
+
+    it('should handle different opacity values', () => {
+        const result = hexToRgba('#FF0000', 0.5);
+        expect(result).toBe('rgba(255, 0, 0, 0.5)');
+    });
+
+    it('should convert mixed color hex to rgba', () => {
+        const result = hexToRgba('#1A2B3C', 0.8);
+        expect(result).toBe('rgba(26, 43, 60, 0.8)');
+    });
+
+    it('should handle lowercase hex values', () => {
+        const result = hexToRgba('#ff00ff', 1);
+        expect(result).toBe('rgba(255, 0, 255, 1)');
     });
 }); 
