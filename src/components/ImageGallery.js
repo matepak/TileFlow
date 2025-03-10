@@ -474,15 +474,16 @@ const ImageGallery = () => {
 
     // Cleanup object URLs when component unmounts
     useEffect(() => {
+        const currentImages = images; // Capture current value of images
         return () => {
-            images.forEach(image => {
+            currentImages.forEach(image => {
                 if (image.src) {
                     // Only revoke URLs when component is unmounting, not on every update
                     URL.revokeObjectURL(image.src);
                 }
             });
         };
-    }, []); // Empty dependency array so this only runs on unmount
+    }, [images]); // Add images to dependency array
 
     // Layout Settings Handlers
     const handleRowHeightChange = (e) => {
@@ -644,9 +645,9 @@ const ImageGallery = () => {
     }, {});
 
     // Replace the saveGalleryAsImage function with a call to the imported function
-    const handleSaveGallery = () => {
-        saveGalleryAsImage(galleryRef, images, layoutSettings, setIsSaving);
-    };
+    // const handleSaveGallery = () => {
+    //     saveGalleryAsImage(galleryRef, images, layoutSettings, setIsSaving);
+    // };
 
     return (
         <div className="gallery-container">
