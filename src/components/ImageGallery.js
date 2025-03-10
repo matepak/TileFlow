@@ -692,7 +692,7 @@ const ImageGallery = () => {
 
     return (
         <div className="gallery-container">
-            <h1 className="gallery-title">Advanced Image Gallery</h1>
+            <h1 className="gallery-title">TileFlow</h1>
 
             {/* Tab Navigation */}
             <div className="tab-navigation">
