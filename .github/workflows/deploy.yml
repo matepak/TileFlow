@@ -1,4 +1,4 @@
-name: Deploy to CyberFolks via lftp
+name: Deploy to CyberFolks via FTPS
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
         
       - name: Run tests
         run: npm test
-        continue-on-error: true  # Continue deployment even if tests fail
+        continue-on-error: true
         
       - name: Build project
         run: npm run build
@@ -32,35 +32,44 @@ jobs:
       - name: Install lftp
         run: sudo apt-get install -y lftp
         
-      - name: Deploy via lftp
+      - name: Deploy via FTPS
         run: |
-          # Add verbose debugging to see connection details
-          lftp -d -e "
-          # Set general options
-          set net:timeout 60;
-          set net:max-retries 3;
-          set net:reconnect-interval-base 5;
+          # Create temporary lftp script with sensitive information
+          cat > /tmp/lftp_script << 'EOL'
+          # Enable TLS/SSL and set options
+          set ftp:ssl-force true
+          set ftp:ssl-protect-data true
+          set ssl:verify-certificate no
           
-          # Disable SSL for regular FTP
-          set ftp:ssl-allow no;
+          # Set connection parameters
+          set net:timeout 90
+          set net:max-retries 5
+          set net:reconnect-interval-base 5
           
-          # Connect to server
-          open s113.cyber-folks.pl;
+          # Connect with explicit FTPS (AUTH TLS)
+          open -u "$USERNAME","$PASSWORD" s113.cyber-folks.pl
           
-          # Login
-          user ${{ secrets.CYBERFOLKS_FTP_USERNAME }} ${{ secrets.CYBERFOLKS_FTP_PASSWORD }};
+          # Debug connection info
+          debug 3
           
-          # Show remote directory to verify connection
-          ls -la;
+          # Enter passive mode (often required)
+          set ftp:passive-mode on
           
-          # Upload files with mirror (sync) - only upload what has changed
-          mirror --reverse --delete --verbose ./build/ /domains/webgrove.pl/public_html/apps/tiling_img/;
+          # Upload files
+          mirror --reverse --delete --verbose ./build/ /domains/webgrove.pl/public_html/apps/tiling_img/
           
-          # Exit
-          quit"
-        env:
-          # Set environment variables for better security
-          LFTP_PASSWORD: ${{ secrets.CYBERFOLKS_FTP_PASSWORD }}
-
+          # Exit cleanly
+          bye
+          EOL
+          
+          # Make the script executable
+          chmod +x /tmp/lftp_script
+          
+          # Execute the script with environment variables
+          USERNAME="${{ secrets.CYBERFOLKS_FTP_USERNAME }}" PASSWORD="${{ secrets.CYBERFOLKS_FTP_PASSWORD }}" lftp -f /tmp/lftp_script
+          
+          # Remove temp script
+          rm /tmp/lftp_script
+        
       - name: Deployment status
-        run: echo "Deployment completed. Check logs for any transfer errors."
+        run: echo "Deployment completed. Check logs for any errors."
