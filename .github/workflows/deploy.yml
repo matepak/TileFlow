@@ -39,4 +39,7 @@ jobs:
           server-dir: /domains/webgrove.pl/public_html/apps/tiling_img/
           protocol: ftps
           port: 21
-          security: strict # This is crucial for most FTPS servers
+          security: loose # This is crucial for most FTPS servers
+          timeout: 90000
+          log-level: verbose
+          dangerous-clean-slate: true
