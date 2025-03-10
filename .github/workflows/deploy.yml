@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 name: Deploy to CyberFolks
+=======
+name: Deploy to CyberFolks via FTPS
+>>>>>>> 2a868df12a1d9c37a5a2e6cc9315df9227907745
 
 on:
   push:
@@ -28,18 +32,27 @@ jobs:
         
       - name: Build project
         run: npm run build
+<<<<<<< HEAD
 
       # ===== OPTION 1: SFTP DEPLOYMENT (RECOMMENDED) =====
       - name: Install OpenSSH client
         run: sudo apt-get install -y openssh-client
         
       - name: Deploy via SFTP
+=======
+        
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+        
+      - name: Deploy via FTPS
+>>>>>>> 2a868df12a1d9c37a5a2e6cc9315df9227907745
         env:
           FTP_USERNAME: ${{ secrets.CYBERFOLKS_FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.CYBERFOLKS_FTP_PASSWORD }}
           FTP_SERVER: s113.cyber-folks.pl
           REMOTE_DIR: /domains/webgrove.pl/public_html/apps/tiling_img/
         run: |
+<<<<<<< HEAD
           # Create SFTP batch file
           echo "# SFTP batch commands" > sftp_batch.txt
           echo "mkdir -p ${REMOTE_DIR}" >> sftp_batch.txt
@@ -108,10 +121,22 @@ jobs:
           set ftp:use-feat no
           
           # Enable TLS
+=======
+          # Create a .netrc file for authentication
+          echo "machine ${FTP_SERVER}" > ~/.netrc
+          echo "login ${FTP_USERNAME}" >> ~/.netrc
+          echo "password ${FTP_PASSWORD}" >> ~/.netrc
+          chmod 600 ~/.netrc
+          
+          # Try different connection method (using direct lftp command)
+          lftp -d -e "
+          # TLS settings
+>>>>>>> 2a868df12a1d9c37a5a2e6cc9315df9227907745
           set ftp:ssl-force true
           set ftp:ssl-protect-data true
           set ssl:verify-certificate no
           
+<<<<<<< HEAD
           # Connection parameters
           set net:timeout 90
           set net:max-retries 3
@@ -121,6 +146,24 @@ jobs:
           open -u "${FTP_USERNAME}","${FTP_PASSWORD}" ${FTP_SERVER}
           
           # Create and navigate to directory
+=======
+          # Connection settings
+          set net:timeout 90
+          set net:max-retries 5
+          set net:reconnect-interval-base 5
+          set ftp:passive-mode on
+          
+          # Debug verbosity
+          debug 4
+          
+          # Open connection with explicit URL format
+          open ftp://${FTP_USERNAME}:${FTP_PASSWORD}@${FTP_SERVER}
+          
+          # Show working directory to verify connection
+          pwd
+          
+          # Change to remote directory - create if it doesn't exist
+>>>>>>> 2a868df12a1d9c37a5a2e6cc9315df9227907745
           mkdir -p ${REMOTE_DIR}
           cd ${REMOTE_DIR}
           
@@ -128,6 +171,7 @@ jobs:
           mirror --reverse --delete --verbose ./build/ .
           
           # Exit
+<<<<<<< HEAD
           bye
           EOF
           
@@ -147,3 +191,9 @@ jobs:
           echo "2. Username format: For main account use hosting panel login, for additional accounts use format accountname@domain"
           echo "3. Try manually using FileZilla first to confirm your credentials work"
           echo "4. Contact CyberFolks support to ask about GitHub Actions deployment options"
+=======
+          bye"
+          
+          # Clean up
+          rm -f ~/.netrc
+>>>>>>> 2a868df12a1d9c37a5a2e6cc9315df9227907745
