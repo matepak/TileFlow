@@ -37,5 +37,5 @@ jobs:
           port: 22 # Default SFTP port
           password: ${{ secrets.CYBERFOLKS_FTP_PASSWORD }}
           local_path: './build/*'
-          remote_path: '/public_html/'
+          remote_path: '/domains/webgrove.pl/public_html/apps/tiling_img/'
           sftp_only: true
