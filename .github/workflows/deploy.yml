@@ -1,9 +1,8 @@
-name: Deploy to Cyberfolks
+name: Deploy to Cyberfolks via SFTP
 
 on:
   push:
     branches: [ main ]
-  # Enables manual trigger from Actions tab
   workflow_dispatch:
 
 jobs:
@@ -25,21 +24,18 @@ jobs:
         
       - name: Run tests
         run: npm test
-        # If your tests might fail but you still want to continue, add this:
-        # continue-on-error: true
+        continue-on-error: true
         
       - name: Build project
         run: npm run build
-        env:
-          # Add any environment variables needed for build
-          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-          
-      - name: Deploy to Cyberfolks via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        
+      - name: Deploy to Cyberfolks via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          server: ${{ secrets.CYBERFOLKS_FTP_SERVER }}
           username: ${{ secrets.CYBERFOLKS_FTP_USERNAME }}
+          server: ${{ secrets.CYBERFOLKS_FTP_SERVER }}
+          port: 22 # Default SFTP port
           password: ${{ secrets.CYBERFOLKS_FTP_PASSWORD }}
-          local-dir: ./build/
-          server-dir: /domains/webgrove.pl/public_html/apps/tiling_img/   # Adjust this path based on your Cyberfolks setup
-          dangerous-clean-slate: true # Use with caution - will delete all existing files in target directory
+          local_path: './build/*'
+          remote_path: '/public_html/'
+          sftp_only: true
