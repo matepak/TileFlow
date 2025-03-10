@@ -1,9 +1,9 @@
-name: Deploy to CyberFolks via FTPS
+name: Deploy to Cyberfolks via FTPS
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:  # Allows manual triggering
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -29,47 +29,16 @@ jobs:
       - name: Build project
         run: npm run build
         
-      - name: Install lftp
-        run: sudo apt-get install -y lftp
-        
-      - name: Deploy via FTPS
-        run: |
-          # Create temporary lftp script with sensitive information
-          cat > /tmp/lftp_script << 'EOL'
-          # Enable TLS/SSL and set options
-          set ftp:ssl-force true
-          set ftp:ssl-protect-data true
-          set ssl:verify-certificate no
-          
-          # Set connection parameters
-          set net:timeout 90
-          set net:max-retries 5
-          set net:reconnect-interval-base 5
-          
-          # Connect with explicit FTPS (AUTH TLS)
-          open -u "$USERNAME","$PASSWORD" s113.cyber-folks.pl
-          
-          # Debug connection info
-          debug 3
-          
-          # Enter passive mode (often required)
-          set ftp:passive-mode on
-          
-          # Upload files
-          mirror --reverse --delete --verbose ./build/ /domains/webgrove.pl/public_html/apps/tiling_img/
-          
-          # Exit cleanly
-          bye
-          EOL
-          
-          # Make the script executable
-          chmod +x /tmp/lftp_script
-          
-          # Execute the script with environment variables
-          USERNAME="${{ secrets.CYBERFOLKS_FTP_USERNAME }}" PASSWORD="${{ secrets.CYBERFOLKS_FTP_PASSWORD }}" lftp -f /tmp/lftp_script
-          
-          # Remove temp script
-          rm /tmp/lftp_script
-        
-      - name: Deployment status
-        run: echo "Deployment completed. Check logs for any errors."
+      - name: Deploy to Cyberfolks via FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: s113.cyber-folks.pl
+          username: ${{ secrets.CYBERFOLKS_FTP_USERNAME }}
+          password: ${{ secrets.CYBERFOLKS_FTP_PASSWORD }}
+          local-dir: ./build/
+          server-dir: /domains/webgrove.pl/public_html/apps/tiling_img/
+          protocol: ftps-legacy
+          port: 21
+          timeout: 90000
+          log-level: verbose
+          dangerous-clean-slate: true
