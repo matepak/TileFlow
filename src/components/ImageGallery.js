@@ -9,6 +9,7 @@ import useCleanupObjectUrls from '../hooks/useCleanupObjectUrls';
 import { handleImageUpload } from '../utils/imageUploadHandler';
 import { sortImages } from '../utils/sortUtils';
 import GalleryDisplay from './GalleryDisplay';
+import MainControls from './MainControls';
 
 const ImageGallery = () => {
     const [images, setImages] = useState([]);
@@ -908,32 +909,13 @@ const ImageGallery = () => {
             </div>
 
             {/* Main Controls */}
-            <div className="main-controls">
-                <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={onImageUpload}
-                    className="file-input"
-                    ref={fileInputRef}
-                />
-
-                <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="action-button upload-button"
-                    disabled={isLoading}
-                >
-                    {isLoading ? 'Processing...' : 'Upload Images'}
-                </button>
-
-                <button
-                    onClick={clearImages}
-                    className="action-button clear-button"
-                    disabled={isLoading || images.length === 0}
-                >
-                    Clear All
-                </button>
-            </div>
+            <MainControls
+                isLoading={isLoading}
+                images={images}
+                fileInputRef={fileInputRef}
+                onImageUpload={onImageUpload}
+                clearImages={clearImages}
+            />
 
             {isLoading && (
                 <div className="status-message loading-message">Processing images...</div>
