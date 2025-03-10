@@ -6,6 +6,7 @@ import logo from '../assets/logo.png'; // Add this import at the top
 import { defaultLayoutSettings } from '../constants/defaultSettings';
 import useContainerWidth from '../hooks/useContainerWidth';
 import useCleanupObjectUrls from '../hooks/useCleanupObjectUrls';
+import { getFileNameWithoutExtension } from '../utils/fileUtils';
 
 const ImageGallery = () => {
     const [images, setImages] = useState([]);
@@ -17,12 +18,6 @@ const ImageGallery = () => {
     const galleryRef = useRef(null);
     const fileInputRef = useRef(null);
     const containerWidth = useContainerWidth(containerRef, layoutSettings.containerPadding);
-
-    // Extract filename without extension
-    const getFileNameWithoutExtension = (fileName) => {
-        if (!fileName) return '';
-        return fileName.replace(/\.[^/.]+$/, ""); // Remove file extension
-    };
 
     // Process uploaded image files
     const handleImageUpload = async (event) => {
