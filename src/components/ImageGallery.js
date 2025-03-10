@@ -3,37 +3,11 @@ import './ImageGallery.css'; // We'll create this CSS file separately
 import SaveGalleryImage, { saveGalleryAsImage } from './SaveGalleryImage';
 import { hexToRgba } from '../utils/imageUtils';
 import logo from '../assets/logo.png'; // Add this import at the top
+import { defaultLayoutSettings } from '../constants/defaultSettings';
 
 const ImageGallery = () => {
     const [images, setImages] = useState([]);
-    const [layoutSettings, setLayoutSettings] = useState({
-        rowHeight: 200,
-        rowSpacing: 8,
-        imageSpacing: 4,
-        containerPadding: 12,
-        lastRowBehavior: 'justify', // 'justify', 'left', 'fill'
-        preventUpscaling: true,
-        backgroundColor: '#ffffff',
-        forceImagesPerRow: {
-            enabled: false,
-            count: 3
-        },
-        sorting: {
-            type: 'label', // 'label', 'filename', 'size', 'none'
-            direction: 'asc' // 'asc', 'desc'
-        },
-        labels: {
-            enabled: true,
-            fontSize: 12,
-            fontColor: '#ffffff',
-            backgroundColor: '#000000',
-            backgroundOpacity: 0.7,
-            padding: 6
-        },
-        export: {
-            dpi: 96
-        }
-    });
+    const [layoutSettings, setLayoutSettings] = useState(defaultLayoutSettings);
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [containerWidth, setContainerWidth] = useState(0);
