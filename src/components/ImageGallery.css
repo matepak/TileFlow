@@ -12,19 +12,23 @@
 .gallery-logo {
     width: 50px;
     height: 50px;
-    margin-bottom: 1rem;
+    order: -1;
 }
 
 .gallery-header {
-    display: inline-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
     margin-bottom: 1rem;
+    width: 100%;
 }
 
 .gallery-title {
     font-size: 1.5rem;
     font-weight: bold;
-    margin-bottom: 1rem;
     color: #333;
+    margin: 0;
 }
 
 /* Tab Navigation */
