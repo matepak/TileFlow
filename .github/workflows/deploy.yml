@@ -37,9 +37,8 @@ jobs:
           password: ${{ secrets.CYBERFOLKS_FTP_PASSWORD }}
           local-dir: ./build/
           server-dir: /domains/webgrove.pl/public_html/apps/tiling_img/
-          protocol: ftps
-          port: 21
-          security: loose # This is crucial for most FTPS servers
+          protocol: sftp
+          port: 222
           timeout: 90000
           log-level: verbose
           dangerous-clean-slate: true
