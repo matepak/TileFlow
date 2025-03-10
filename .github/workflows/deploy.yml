@@ -1,4 +1,4 @@
-name: Deploy to Cyberfolks via SFTP
+name: Deploy to Cyberfolks via FTPS
 
 on:
   push:
@@ -29,13 +29,14 @@ jobs:
       - name: Build project
         run: npm run build
         
-      - name: Deploy to Cyberfolks via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      - name: Deploy to Cyberfolks via FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
+          server: s113.cyber-folks.pl
           username: ${{ secrets.CYBERFOLKS_FTP_USERNAME }}
-          server: ${{ secrets.CYBERFOLKS_FTP_SERVER }}
-          port: 22 # Default SFTP port
           password: ${{ secrets.CYBERFOLKS_FTP_PASSWORD }}
-          local_path: './build/*'
-          remote_path: '/domains/webgrove.pl/public_html/apps/tiling_img/'
-          sftp_only: true
+          local-dir: ./build/
+          server-dir: /domains/webgrove.pl/public_html/apps/tiling_img/
+          protocol: ftps
+          port: 21
+          security: explicit # This is crucial for most FTPS servers
