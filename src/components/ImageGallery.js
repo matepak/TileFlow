@@ -4,35 +4,18 @@ import SaveGalleryImage, { saveGalleryAsImage } from './SaveGalleryImage';
 import { hexToRgba } from '../utils/imageUtils';
 import logo from '../assets/logo.png'; // Add this import at the top
 import { defaultLayoutSettings } from '../constants/defaultSettings';
+import useContainerWidth from '../hooks/useContainerWidth';
 
 const ImageGallery = () => {
     const [images, setImages] = useState([]);
     const [layoutSettings, setLayoutSettings] = useState(defaultLayoutSettings);
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
-    const [containerWidth, setContainerWidth] = useState(0);
     const [activeTab, setActiveTab] = useState('layout'); // 'layout', 'labels', 'sorting', 'export'
     const containerRef = useRef(null);
     const galleryRef = useRef(null);
     const fileInputRef = useRef(null);
-
-    // Set up resize observer to get container width
-    useEffect(() => {
-        if (!containerRef.current) return;
-
-        const resizeObserver = new ResizeObserver(entries => {
-            for (let entry of entries) {
-                // Subtract padding to get usable width
-                setContainerWidth(entry.contentRect.width - (layoutSettings.containerPadding * 2));
-            }
-        });
-
-        resizeObserver.observe(containerRef.current);
-
-        return () => {
-            resizeObserver.disconnect();
-        };
-    }, [layoutSettings.containerPadding]);
+    const containerWidth = useContainerWidth(containerRef, layoutSettings.containerPadding);
 
     // Extract filename without extension
     const getFileNameWithoutExtension = (fileName) => {
