@@ -3,7 +3,7 @@ name: Deploy to CyberFolks via FTPS
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:  # Allows manual triggering
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -33,43 +33,49 @@ jobs:
         run: sudo apt-get install -y lftp
         
       - name: Deploy via FTPS
+        env:
+          FTP_USERNAME: ${{ secrets.CYBERFOLKS_FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.CYBERFOLKS_FTP_PASSWORD }}
+          FTP_SERVER: s113.cyber-folks.pl
+          REMOTE_DIR: /domains/webgrove.pl/public_html/apps/tiling_img/
         run: |
-          # Create temporary lftp script with sensitive information
-          cat > /tmp/lftp_script << 'EOL'
-          # Enable TLS/SSL and set options
+          # Create a .netrc file for authentication
+          echo "machine ${FTP_SERVER}" > ~/.netrc
+          echo "login ${FTP_USERNAME}" >> ~/.netrc
+          echo "password ${FTP_PASSWORD}" >> ~/.netrc
+          chmod 600 ~/.netrc
+          
+          # Try different connection method (using direct lftp command)
+          lftp -d -e "
+          # TLS settings
           set ftp:ssl-force true
           set ftp:ssl-protect-data true
           set ssl:verify-certificate no
           
-          # Set connection parameters
+          # Connection settings
           set net:timeout 90
           set net:max-retries 5
           set net:reconnect-interval-base 5
-          
-          # Connect with explicit FTPS (AUTH TLS)
-          open -u "$USERNAME","$PASSWORD" s113.cyber-folks.pl
-          
-          # Debug connection info
-          debug 3
-          
-          # Enter passive mode (often required)
           set ftp:passive-mode on
           
+          # Debug verbosity
+          debug 4
+          
+          # Open connection with explicit URL format
+          open ftp://${FTP_USERNAME}:${FTP_PASSWORD}@${FTP_SERVER}
+          
+          # Show working directory to verify connection
+          pwd
+          
+          # Change to remote directory - create if it doesn't exist
+          mkdir -p ${REMOTE_DIR}
+          cd ${REMOTE_DIR}
+          
           # Upload files
-          mirror --reverse --delete --verbose ./build/ /domains/webgrove.pl/public_html/apps/tiling_img/
+          mirror --reverse --delete --verbose ./build/ .
           
-          # Exit cleanly
-          bye
-          EOL
+          # Exit
+          bye"
           
-          # Make the script executable
-          chmod +x /tmp/lftp_script
-          
-          # Execute the script with environment variables
-          USERNAME="${{ secrets.CYBERFOLKS_FTP_USERNAME }}" PASSWORD="${{ secrets.CYBERFOLKS_FTP_PASSWORD }}" lftp -f /tmp/lftp_script
-          
-          # Remove temp script
-          rm /tmp/lftp_script
-        
-      - name: Deployment status
-        run: echo "Deployment completed. Check logs for any errors."
+          # Clean up
+          rm -f ~/.netrc
