@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './ImageGallery.css'; // We'll create this CSS file separately
-import SaveGalleryImage, { saveGalleryAsImage } from './SaveGalleryImage';
+//import SaveGalleryImage, { saveGalleryAsImage } from './SaveGalleryImage';
 import { hexToRgba } from '../utils/imageUtils';
 import logo from '../assets/logo.png'; // Add this import at the top
 import { defaultLayoutSettings } from '../constants/defaultSettings';
