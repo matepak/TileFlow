@@ -1,0 +1,45 @@
+name: Deploy to Cyberfolks
+
+on:
+  push:
+    branches: [ main ]
+  # Enables manual trigger from Actions tab
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run tests
+        run: npm test
+        # If your tests might fail but you still want to continue, add this:
+        # continue-on-error: true
+        
+      - name: Build project
+        run: npm run build
+        env:
+          # Add any environment variables needed for build
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+          
+      - name: Deploy to Cyberfolks via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.CYBERFOLKS_FTP_SERVER }}
+          username: ${{ secrets.CYBERFOLKS_FTP_USERNAME }}
+          password: ${{ secrets.CYBERFOLKS_FTP_PASSWORD }}
+          local-dir: ./build/
+          server-dir: /domains/webgrove.pl/public_html/apps/tiling_img/   # Adjust this path based on your Cyberfolks setup
+          dangerous-clean-slate: true # Use with caution - will delete all existing files in target directory
