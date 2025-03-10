@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './ImageGallery.css'; // We'll create this CSS file separately
-import SaveGalleryImage from './SaveGalleryImage';
-import { hexToRgba } from '../utils/imageUtils';
 import logo from '../assets/logo.png'; // Add this import at the top
 import { defaultLayoutSettings } from '../constants/defaultSettings';
 import useContainerWidth from '../hooks/useContainerWidth';
@@ -550,11 +548,6 @@ const ImageGallery = () => {
         acc[rowIndex].push(image);
         return acc;
     }, {});
-
-    // Replace the saveGalleryAsImage function with a call to the imported function
-    // const handleSaveGallery = () => {
-    //     saveGalleryAsImage(galleryRef, images, layoutSettings, setIsSaving);
-    // };
 
     return (
         <div className="gallery-container">
