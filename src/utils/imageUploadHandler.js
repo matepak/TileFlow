@@ -1,4 +1,3 @@
-import { getFileNameWithoutExtension } from './fileUtils';
 import { processImageFile } from './imageProcessor';
 
 export const handleImageUpload = async (files, currentImages, setImages, setIsLoading, fileInputRef) => {
