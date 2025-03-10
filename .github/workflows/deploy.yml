@@ -29,72 +29,11 @@ jobs:
       - name: Build project
         run: npm run build
 
-      # ===== OPTION 1: SFTP DEPLOYMENT (RECOMMENDED) =====
-      - name: Install OpenSSH client
-        run: sudo apt-get install -y openssh-client
-        
-      - name: Deploy via SFTP
-        env:
-          FTP_USERNAME: ${{ secrets.CYBERFOLKS_FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.CYBERFOLKS_FTP_PASSWORD }}
-          FTP_SERVER: s113.cyber-folks.pl
-          REMOTE_DIR: /domains/webgrove.pl/public_html/apps/tiling_img/
-        run: |
-          # Create SFTP batch file
-          echo "# SFTP batch commands" > sftp_batch.txt
-          echo "mkdir -p ${REMOTE_DIR}" >> sftp_batch.txt
-          echo "cd ${REMOTE_DIR}" >> sftp_batch.txt
-          echo "put -r ./build/* ." >> sftp_batch.txt
-          echo "ls -la" >> sftp_batch.txt
-          echo "bye" >> sftp_batch.txt
-          
-          # Using expect to handle password input
-          expect << EOF
-          spawn sftp -P 222 -o StrictHostKeyChecking=no -b sftp_batch.txt ${FTP_USERNAME}@${FTP_SERVER}
-          expect "password:"
-          send "${FTP_PASSWORD}\n"
-          expect eof
-          EOF
-          
-          # Clean up
-          rm -f sftp_batch.txt
-        continue-on-error: true
-
-      # ===== OPTION 2: ALTERNATIVE SFTP DEPLOYMENT =====
-      - name: Install sshpass for alternative SFTP method
-        if: ${{ failure() }}
-        run: sudo apt-get install -y sshpass
-        
-      - name: Alternative SFTP Deploy
-        if: ${{ failure() }}
-        env:
-          FTP_USERNAME: ${{ secrets.CYBERFOLKS_FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.CYBERFOLKS_FTP_PASSWORD }}
-          FTP_SERVER: s113.cyber-folks.pl
-          REMOTE_DIR: /domains/webgrove.pl/public_html/apps/tiling_img/
-        run: |
-          # Create SFTP batch file
-          echo "# SFTP batch commands" > sftp_batch.txt
-          echo "mkdir -p ${REMOTE_DIR}" >> sftp_batch.txt
-          echo "cd ${REMOTE_DIR}" >> sftp_batch.txt
-          echo "put -r ./build/* ." >> sftp_batch.txt
-          echo "ls -la" >> sftp_batch.txt
-          echo "bye" >> sftp_batch.txt
-          
-          # Try with sshpass
-          sshpass -p "${FTP_PASSWORD}" sftp -P 222 -o StrictHostKeyChecking=no -b sftp_batch.txt ${FTP_USERNAME}@${FTP_SERVER}
-          
-          # Clean up
-          rm -f sftp_batch.txt
-        continue-on-error: true
-
       # ===== OPTION 3: FTPS DEPLOYMENT WITH SPECIFIC SETTINGS =====
       - name: Install lftp for FTPS
-        if: ${{ failure() }}
         run: sudo apt-get install -y lftp
         
-      - name: Try FTPS Deploy
-        if: ${{ failure() }}
+      - name: Deploy via FTPS
         env:
           FTP_USERNAME: ${{ secrets.CYBERFOLKS_FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.CYBERFOLKS_FTP_PASSWORD }}
@@ -138,7 +77,7 @@ jobs:
           rm -f ftps_script.txt
         continue-on-error: true
         
-      # ===== FALLBACK NOTIFICATION =====
+      # ===== DEPLOYMENT STATUS CHECK =====
       - name: Deployment Status Check
         if: ${{ failure() }}
         run: |
