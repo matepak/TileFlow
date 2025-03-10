@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './ImageGallery.css'; // We'll create this CSS file separately
-import SaveGalleryImage, { saveGalleryAsImage } from './SaveGalleryImage';
+import SaveGalleryImage from './SaveGalleryImage';
 import { hexToRgba } from '../utils/imageUtils';
 import logo from '../assets/logo.png'; // Add this import at the top
 import { defaultLayoutSettings } from '../constants/defaultSettings';
 import useContainerWidth from '../hooks/useContainerWidth';
+import useCleanupObjectUrls from '../hooks/useCleanupObjectUrls';
 
 const ImageGallery = () => {
     const [images, setImages] = useState([]);
@@ -472,17 +473,8 @@ const ImageGallery = () => {
         });
     };
 
-    // Cleanup object URLs when component unmounts
-    useEffect(() => {
-        return () => {
-            images.forEach(image => {
-                if (image.src) {
-                    // Only revoke URLs when component is unmounting, not on every update
-                    URL.revokeObjectURL(image.src);
-                }
-            });
-        };
-    }, []); // Empty dependency array so this only runs on unmount
+    // Replace the cleanup useEffect with the custom hook
+    useCleanupObjectUrls(images);
 
     // Layout Settings Handlers
     const handleRowHeightChange = (e) => {
@@ -644,9 +636,9 @@ const ImageGallery = () => {
     }, {});
 
     // Replace the saveGalleryAsImage function with a call to the imported function
-    const handleSaveGallery = () => {
-        saveGalleryAsImage(galleryRef, images, layoutSettings, setIsSaving);
-    };
+    // const handleSaveGallery = () => {
+    //     saveGalleryAsImage(galleryRef, images, layoutSettings, setIsSaving);
+    // };
 
     return (
         <div className="gallery-container">
