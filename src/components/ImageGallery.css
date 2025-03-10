@@ -9,6 +9,17 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
+.gallery-logo {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 1rem;
+}
+
+.gallery-header {
+    display: inline-flex;
+    margin-bottom: 1rem;
+}
+
 .gallery-title {
     font-size: 1.5rem;
     font-weight: bold;

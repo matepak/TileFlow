@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './ImageGallery.css'; // We'll create this CSS file separately
 import SaveGalleryImage, { saveGalleryAsImage } from './SaveGalleryImage';
 import { hexToRgba } from '../utils/imageUtils';
+import logo from '../assets/logo.png'; // Add this import at the top
 
 const ImageGallery = () => {
     const [images, setImages] = useState([]);
@@ -692,7 +693,12 @@ const ImageGallery = () => {
 
     return (
         <div className="gallery-container">
-            <h1 className="gallery-title">TileFlow</h1>
+            <div className="gallery-header">
+                <h1 className="gallery-title">TileFlow</h1>
+                <img src={logo} alt="TileFlow Logo" className="gallery-logo" />
+            </div>
+
+            <p className="gallery-description">Generate a grid of images</p>
 
             {/* Tab Navigation */}
             <div className="tab-navigation">
