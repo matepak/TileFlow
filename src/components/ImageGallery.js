@@ -697,8 +697,8 @@ const ImageGallery = () => {
                 <h1 className="gallery-title">TileFlow</h1>
                 <img src={logo} alt="TileFlow Logo" className="gallery-logo" />
             </div>
-
             <p className="gallery-description">Generate a grid of images</p>
+
 
             {/* Tab Navigation */}
             <div className="tab-navigation">
