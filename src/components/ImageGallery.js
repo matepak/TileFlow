@@ -7,6 +7,7 @@ import { defaultLayoutSettings } from '../constants/defaultSettings';
 import useContainerWidth from '../hooks/useContainerWidth';
 import useCleanupObjectUrls from '../hooks/useCleanupObjectUrls';
 import { handleImageUpload } from '../utils/imageUploadHandler';
+import { sortImages } from '../utils/sortUtils';
 
 const ImageGallery = () => {
     const [images, setImages] = useState([]);
@@ -29,33 +30,9 @@ const ImageGallery = () => {
         );
     };
 
-    // Sort images based on current sorting settings
-    const sortImages = useCallback((imagesToSort) => {
-        if (imagesToSort.length <= 1) return imagesToSort;
-
-        const { type, direction } = layoutSettings.sorting;
-        const sortedImages = [...imagesToSort];
-
-        const multiplier = direction === 'asc' ? 1 : -1;
-
-        sortedImages.sort((a, b) => {
-            if (type === 'label') {
-                const labelA = (a.label || '').toLowerCase();
-                const labelB = (b.label || '').toLowerCase();
-                return multiplier * labelA.localeCompare(labelB);
-            } else if (type === 'filename') {
-                const filenameA = (a.fileName || '').toLowerCase();
-                const filenameB = (b.fileName || '').toLowerCase();
-                return multiplier * filenameA.localeCompare(filenameB);
-            } else if (type === 'size') {
-                const sizeA = a.originalWidth * a.originalHeight;
-                const sizeB = b.originalWidth * b.originalHeight;
-                return multiplier * (sizeA - sizeB);
-            }
-            return 0;
-        });
-
-        return sortedImages;
+    // Use the imported sortImages function with useCallback
+    const sortImagesCallback = useCallback((imagesToSort) => {
+        return sortImages(imagesToSort, layoutSettings.sorting);
     }, [layoutSettings.sorting]);
 
     // Calculate row-based layout when images or container width change
@@ -63,7 +40,7 @@ const ImageGallery = () => {
         if (images.length === 0 || containerWidth === 0) return;
 
         // First sort the images
-        const sortedImages = sortImages([...images]);
+        const sortedImages = sortImagesCallback([...images]);
 
         // Check if any images have no layout (typically newly uploaded images)
         const needsLayout = sortedImages.some(img => img.displayWidth === 0 && img.displayHeight === 0);
@@ -109,7 +86,7 @@ const ImageGallery = () => {
             return layoutChanged ? layoutResult : prevImages;
         });
     }, [
-        images, // We need this dependency to detect new uploads
+        images,
         containerWidth,
         layoutSettings.rowHeight,
         layoutSettings.imageSpacing,
@@ -119,7 +96,7 @@ const ImageGallery = () => {
         layoutSettings.forceImagesPerRow.count,
         layoutSettings.sorting.type,
         layoutSettings.sorting.direction,
-        sortImages
+        sortImagesCallback
     ]);
 
     // Fixed images per row layout algorithm
