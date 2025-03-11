@@ -67,27 +67,10 @@ const LayoutSettingsPanel = ({
                 )}
             </div>
 
-            {/* Row Spacing */}
-            <div className="settings-group">
-                <label className="settings-label" htmlFor="rowSpacing">
-                    {isPackeryLayout ? 'Vertical Spacing' : 'Row Spacing'} (px):
-                </label>
-                <input
-                    id="rowSpacing"
-                    type="range"
-                    min="0"
-                    max="50"
-                    value={layoutSettings.rowSpacing}
-                    onChange={onRowSpacingChange}
-                    className="slider-input"
-                />
-                <span className="value-display">{layoutSettings.rowSpacing}px</span>
-            </div>
-
             {/* Image Spacing */}
             <div className="settings-group">
                 <label className="settings-label" htmlFor="imageSpacing">
-                    {isPackeryLayout ? 'Horizontal Spacing' : 'Image Spacing'} (px):
+                    Spacing Between Images and Rows (px):
                 </label>
                 <input
                     id="imageSpacing"
@@ -150,19 +133,6 @@ const LayoutSettingsPanel = ({
                 />
                 <span className="value-display">{layoutSettings.backgroundColor}</span>
             </div>
-
-            {isPackeryLayout && (
-                <div className="packery-info">
-                    <h4>About Packery Layout</h4>
-                    <p>Packery arranges items in an optimal grid layout, filling gaps efficiently.
-                        It works like a masonry layout but with more flexibility.</p>
-                    <ul>
-                        <li>Images maintain their aspect ratio</li>
-                        <li>Spaces are filled efficiently</li>
-                        <li>Height is determined by content</li>
-                    </ul>
-                </div>
-            )}
         </div>
     );
 };

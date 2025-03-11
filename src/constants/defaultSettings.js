@@ -1,7 +1,7 @@
 // Default settings for the image gallery layout
 export const defaultLayoutSettings = {
     rowHeight: 200,
-    rowSpacing: 8,
+    rowSpacing: 4,
     imageSpacing: 4,
     containerPadding: 12,
     lastRowBehavior: 'justify', // 'justify', 'left', 'fill'

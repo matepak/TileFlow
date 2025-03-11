@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { calculateFixedImagesPerRowLayout, calculateRowBasedLayout } from '../utils/layoutCalculator';
 
 const useLayoutCalculator = (
@@ -30,19 +30,8 @@ const useLayoutCalculator = (
         sortImagesCallbackRef.current = sortImagesCallback;
     }, [sortImagesCallback]);
 
-    // Update images ref without causing re-renders
-    useEffect(() => {
-        imagesRef.current = images;
-
-        // For a new batch of images, we should always recalculate
-        if (images.length > 0 && images.some(img => !img.displayWidth || !img.displayHeight)) {
-            // Force recalculation on new images, but don't trigger the effect
-            calculateAndUpdateLayout();
-        }
-    }, [images]);
-
     // The main calculation function extracted to avoid duplication
-    const calculateAndUpdateLayout = () => {
+    const calculateAndUpdateLayout = useCallback(() => {
         // If disabled or no images, don't calculate
         if (disabled || imagesRef.current.length === 0 || containerWidth === 0) return;
 
@@ -75,7 +64,18 @@ const useLayoutCalculator = (
             // For new images or layout changes, always update
             return layoutResult;
         });
-    };
+    }, [disabled, containerWidth, layoutSettings, sortImagesCallbackRef]);
+
+    // Update images ref without causing re-renders
+    useEffect(() => {
+        imagesRef.current = images;
+
+        // For a new batch of images, we should always recalculate
+        if (images.length > 0 && images.some(img => !img.displayWidth || !img.displayHeight)) {
+            // Force recalculation on new images, but don't trigger the effect
+            calculateAndUpdateLayout();
+        }
+    }, [images, calculateAndUpdateLayout]);
 
     // Main effect for layout calculations
     useEffect(() => {
@@ -161,7 +161,10 @@ const useLayoutCalculator = (
         layoutSettings.lastRowBehavior,
         layoutSettings.preventUpscaling,
         layoutSettings.forceImagesPerRow.enabled,
-        layoutSettings.forceImagesPerRow.count
+        layoutSettings.forceImagesPerRow.count,
+        layoutSettings.sorting.type,
+        layoutSettings.sorting.direction,
+        calculateAndUpdateLayout
     ]);
 };
 

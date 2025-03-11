@@ -91,7 +91,8 @@ const ImageGallery = () => {
 
     const handleImageSpacingChange = (e) => {
         const imageSpacing = parseInt(e.target.value);
-        setLayoutSettings({ ...layoutSettings, imageSpacing });
+        const rowSpacing = parseInt(e.target.value);
+        setLayoutSettings({ ...layoutSettings, rowSpacing, imageSpacing });
     };
 
     const handleLastRowBehaviorChange = (e) => {
