@@ -52,14 +52,13 @@ const ImageGallery = () => {
 
     // Save the current layout configuration as JSON
     const saveLayoutConfiguration = () => {
-        saveConfig(layoutSettings, images);
+        saveConfig(layoutSettings);
     };
 
     // load layout configuration
     const loadLayoutConfiguration = () => {
         loadConfig(applyLayoutConfiguration => {
             setLayoutSettings(applyLayoutConfiguration.settings);
-            //setImages(applyLayoutConfiguration.images);
         });
     };
 

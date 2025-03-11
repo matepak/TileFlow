@@ -5,33 +5,17 @@
 /**
  * Saves the current layout configuration as a JSON file
  * @param {Object} layoutSettings - The current layout settings
- * @param {Array} images - The current images array
  * @returns {Promise<void>}
  */
 export const saveLayoutConfiguration = (layoutSettings, images) => {
-    // if (!images || images.length === 0) {
-    //     console.warn('No images to save in configuration');
-    //     return;
-    // }
+
 
     try {
         // Create a configuration object
         const configuration = {
             settings: layoutSettings,
             timestamp: new Date().toISOString(),
-            //imageCount: images.length,
-            // Include the actual images data in the configuration
-            // images: images.map(img => ({
-            //     id: img.id,
-            //     src: img.src,
-            //     width: img.width,
-            //     height: img.height,
-            //     // Include any other properties needed for reconstruction
-            //     // but avoid including large data like the actual image data if possible
-            //     title: img.title,
-            //     description: img.description,
-            //     // Add any other metadata needed
-            // }))
+
         };
 
         // Convert to JSON
@@ -94,12 +78,6 @@ export const loadLayoutConfiguration = async (applyCallback) => {
                         if (!configuration.settings) {
                             throw new Error('Invalid configuration: missing settings');
                         }
-
-                        // Ensure images array exists
-                        // if (!configuration.images || !Array.isArray(configuration.images)) {
-                        //     configuration.images = [];
-                        //     console.warn('Configuration loaded without images array');
-                        // }
 
                         // Apply the configuration if a callback was provided
                         if (typeof applyCallback === 'function') {
