@@ -14,6 +14,7 @@ import SortingPanel from './SortingPanel';
 import LabelSettingsPanel from './LabelSettingsPanel';
 import LayoutSettingsPanel from './LayoutSettingsPanel';
 import useLayoutCalculator from '../hooks/useLayoutCalculator';
+import PackeryGallery from './PackeryGallery';
 
 const ImageGallery = () => {
     const [images, setImages] = useState([]);
@@ -21,6 +22,7 @@ const ImageGallery = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [activeTab, setActiveTab] = useState('layout'); // 'layout', 'labels', 'sorting', 'export'
+    const [layoutType, setLayoutType] = useState('row'); // 'row' or 'packery'
     const containerRef = useRef(null);
     const galleryRef = useRef(null);
     const fileInputRef = useRef(null);
@@ -41,13 +43,14 @@ const ImageGallery = () => {
         return sortImages(imagesToSort, layoutSettings.sorting);
     }, [layoutSettings.sorting]);
 
-    // Use the custom hook for layout calculation
+    // Always call the hook, but disable it when not using row layout
     useLayoutCalculator(
         images,
         setImages,
         containerWidth,
         layoutSettings,
-        sortImagesCallback
+        sortImagesCallback,
+        layoutType !== 'row' // Disable when not using row layout
     );
 
     // Save the current layout configuration as JSON
@@ -226,145 +229,158 @@ const ImageGallery = () => {
         setImages(prevImages => prevImages.filter(img => String(img.id) !== String(imageId)));
     };
 
-    // Group images by row for rendering
-    const imagesByRow = images.reduce((acc, image) => {
+    // Find the imagesByRow calculation and make it conditional
+    // Calculate imagesByRow only for row-based layout
+    const imagesByRow = layoutType === 'row' ? images.reduce((acc, image) => {
         const rowIndex = image.rowIndex || 0;
-        if (!acc[rowIndex]) acc[rowIndex] = [];
+        if (!acc[rowIndex]) {
+            acc[rowIndex] = [];
+        }
         acc[rowIndex].push(image);
         return acc;
-    }, {});
+    }, {}) : {};
+
+    // Add a function to toggle layout type
+    const handleLayoutTypeChange = (e) => {
+        setLayoutType(e.target.value);
+    };
 
     return (
-        <div className="gallery-container">
-            <div className="gallery-header">
-                <h1 className="gallery-title">TileFlow</h1>
-                <img src={logo} alt="TileFlow Logo" className="gallery-logo" />
-            </div>
-            <p className="gallery-description">Generate a grid of images</p>
+        <div className="app-container">
+            <header className="app-header">
+                <div className="logo-container">
+                    <img src={logo} alt="TileFlow Logo" className="app-logo" />
+                    <h1 className="app-title">TileFlow</h1>
+                </div>
+            </header>
 
+            <main className="main-content">
+                <div className="sidebar">
+                    {/* Add layout type selector to the top of MainControls */}
+                    <div className="layout-type-selector">
+                        <label className="settings-label">Layout Type:</label>
+                        <div className="radio-group">
+                            <label className="radio-label">
+                                <input
+                                    type="radio"
+                                    name="layoutType"
+                                    value="row"
+                                    checked={layoutType === 'row'}
+                                    onChange={handleLayoutTypeChange}
+                                />
+                                Row
+                            </label>
+                            <label className="radio-label">
+                                <input
+                                    type="radio"
+                                    name="layoutType"
+                                    value="packery"
+                                    checked={layoutType === 'packery'}
+                                    onChange={handleLayoutTypeChange}
+                                />
+                                Packery
+                            </label>
+                        </div>
+                    </div>
 
-            {/* Tab Navigation */}
-            <div className="tab-navigation">
-                <button
-                    className={`tab-button ${activeTab === 'layout' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('layout')}
-                >
-                    Layout Settings
-                </button>
-                <button
-                    className={`tab-button ${activeTab === 'labels' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('labels')}
-                >
-                    Label Settings
-                </button>
-                <button
-                    className={`tab-button ${activeTab === 'sorting' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('sorting')}
-                >
-                    Sorting
-                </button>
-                <button
-                    className={`tab-button ${activeTab === 'export' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('export')}
-                >
-                    Export
-                </button>
-            </div>
-
-            {/* Settings Panel */}
-            <div className="settings-panel">
-                {/* Layout Settings Panel */}
-                {activeTab === 'layout' && (
-                    <LayoutSettingsPanel
-                        layoutSettings={layoutSettings}
-                        handleRowHeightChange={handleRowHeightChange}
-                        handleForceImagesPerRowToggle={handleForceImagesPerRowToggle}
-                        handleImagesPerRowChange={handleImagesPerRowChange}
-                        handleRowSpacingChange={handleRowSpacingChange}
-                        handleImageSpacingChange={handleImageSpacingChange}
-                        handleLastRowBehaviorChange={handleLastRowBehaviorChange}
-                        handlePreventUpscalingChange={handlePreventUpscalingChange}
-                        handleBackgroundColorChange={handleBackgroundColorChange}
+                    <MainControls
+                        onImageUpload={onImageUpload}
+                        fileInputRef={fileInputRef}
+                        clearImages={clearImages}
                         saveLayoutConfiguration={saveLayoutConfiguration}
                         loadLayoutConfiguration={loadLayoutConfiguration}
-                    />
-                )}
-
-                {/* Label Settings Panel */}
-                {activeTab === 'labels' && (
-                    <LabelSettingsPanel
-                        layoutSettings={layoutSettings}
-                        handleLabelEnableChange={handleLabelEnableChange}
-                        handleLabelFontSizeChange={handleLabelFontSizeChange}
-                        handleLabelPaddingChange={handleLabelPaddingChange}
-                        handleLabelFontColorChange={handleLabelFontColorChange}
-                        handleLabelBackgroundColorChange={handleLabelBackgroundColorChange}
-                        handleLabelOpacityChange={handleLabelOpacityChange}
-                    />
-                )}
-
-                {/* Sorting Panel */}
-                {activeTab === 'sorting' && (
-                    <SortingPanel
-                        layoutSettings={layoutSettings}
-                        handleSortingTypeChange={handleSortingTypeChange}
-                        handleSortingDirectionChange={handleSortingDirectionChange}
-                    />
-                )}
-
-                {/* Export Panel */}
-                {activeTab === 'export' && (
-                    <ExportPanel
-                        layoutSettings={layoutSettings}
-                        handleDpiChange={handleDpiChange}
-                        galleryRef={galleryRef}
+                        setActiveTab={setActiveTab}
+                        activeTab={activeTab}
+                        isLoading={isLoading}
                         images={images}
-                        isSaving={isSaving}
-                        setIsSaving={setIsSaving}
+                    />
+
+                    {activeTab === 'layout' && (
+                        <LayoutSettingsPanel
+                            layoutSettings={layoutSettings}
+                            onRowHeightChange={handleRowHeightChange}
+                            onRowSpacingChange={handleRowSpacingChange}
+                            onImageSpacingChange={handleImageSpacingChange}
+                            onLastRowBehaviorChange={handleLastRowBehaviorChange}
+                            onPreventUpscalingChange={handlePreventUpscalingChange}
+                            onBackgroundColorChange={handleBackgroundColorChange}
+                            onForceImagesPerRowToggle={handleForceImagesPerRowToggle}
+                            onImagesPerRowChange={handleImagesPerRowChange}
+                            isPackeryLayout={layoutType === 'packery'}
+                        />
+                    )}
+
+                    {activeTab === 'labels' && (
+                        <LabelSettingsPanel
+                            layoutSettings={layoutSettings}
+                            handleLabelEnableChange={handleLabelEnableChange}
+                            handleLabelFontSizeChange={handleLabelFontSizeChange}
+                            handleLabelPaddingChange={handleLabelPaddingChange}
+                            handleLabelFontColorChange={handleLabelFontColorChange}
+                            handleLabelBackgroundColorChange={handleLabelBackgroundColorChange}
+                            handleLabelOpacityChange={handleLabelOpacityChange}
+                        />
+                    )}
+
+                    {activeTab === 'sorting' && (
+                        <SortingPanel
+                            layoutSettings={layoutSettings}
+                            handleSortingTypeChange={handleSortingTypeChange}
+                            handleSortingDirectionChange={handleSortingDirectionChange}
+                        />
+                    )}
+
+                    {activeTab === 'export' && (
+                        <ExportPanel
+                            layoutSettings={layoutSettings}
+                            handleDpiChange={handleDpiChange}
+                            galleryRef={galleryRef}
+                            containerRef={containerRef}
+                            images={images}
+                            isSaving={isSaving}
+                            setIsSaving={setIsSaving}
+                            layoutType={layoutType}
+                        />
+                    )}
+
+                    {isLoading && (
+                        <div className="loading-overlay">
+                            <div className="spinner"></div>
+                            <div className="loading-text">Processing images...</div>
+                        </div>
+                    )}
+
+                    {isSaving && (
+                        <div className="loading-overlay">
+                            <div className="spinner"></div>
+                            <div className="loading-text">Generating image...</div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Conditional rendering based on layout type */}
+                {layoutType === 'row' ? (
+                    <GalleryDisplay
+                        images={images}
+                        imagesByRow={imagesByRow}
+                        layoutSettings={layoutSettings}
+                        containerRef={containerRef}
+                        galleryRef={galleryRef}
+                        fileInputRef={fileInputRef}
+                        updateImageLabel={updateImageLabel}
+                        removeImage={removeImage}
+                    />
+                ) : (
+                    <PackeryGallery
+                        images={images}
+                        layoutSettings={layoutSettings}
+                        updateImageLabel={updateImageLabel}
+                        removeImage={removeImage}
+                        fileInputRef={fileInputRef}
+                        galleryRef={galleryRef}
                     />
                 )}
-            </div>
-
-            {/* Main Controls */}
-            <MainControls
-                isLoading={isLoading}
-                images={images}
-                fileInputRef={fileInputRef}
-                onImageUpload={onImageUpload}
-                clearImages={clearImages}
-            />
-
-            {isLoading && (
-                <div className="status-message loading-message">Processing images...</div>
-            )}
-
-            {isSaving && (
-                <div className="status-message saving-message">Creating composite image...</div>
-            )}
-
-            {/* Gallery Display Component */}
-            <GalleryDisplay
-                images={images}
-                imagesByRow={imagesByRow}
-                layoutSettings={layoutSettings}
-                containerRef={containerRef}
-                galleryRef={galleryRef}
-                fileInputRef={fileInputRef}
-                updateImageLabel={updateImageLabel}
-                removeImage={removeImage}
-            />
-
-            <div className="features-info">
-                <h3 className="features-title">Features:</h3>
-                <ul className="features-list">
-                    <li><strong>Labels:</strong> Each image shows its filename (without extension) in the top-left corner</li>
-                    <li><strong>Customizable labels:</strong> Change font color, background color, opacity, size, and padding</li>
-                    <li><strong>Edit labels:</strong> Hover over any image to edit its label text</li>
-                    <li><strong>Alphabetical sorting:</strong> Images can be sorted by label name, filename, or size</li>
-                    <li><strong>Export options:</strong> Save your tiled layout as a composite image with all labels included</li>
-                    <li><strong>Organization:</strong> All settings are organized in tabs for better user experience</li>
-                </ul>
-            </div>
+            </main>
         </div>
     );
 };

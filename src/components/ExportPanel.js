@@ -8,6 +8,7 @@ const ExportPanel = ({
     images,
     isSaving,
     setIsSaving,
+    layoutType
 }) => {
     return (
         <div className="panel-content">
@@ -83,6 +84,7 @@ const ExportPanel = ({
                     isSaving={isSaving}
                     setIsSaving={setIsSaving}
                     dpi={layoutSettings.export.dpi}
+                    isPackeryLayout={layoutType === 'packery'}
                 />
             </div>
 
