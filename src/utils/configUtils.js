@@ -9,14 +9,29 @@
  * @returns {Promise<void>}
  */
 export const saveLayoutConfiguration = (layoutSettings, images) => {
-    if (images.length === 0) return;
+    // if (!images || images.length === 0) {
+    //     console.warn('No images to save in configuration');
+    //     return;
+    // }
 
     try {
         // Create a configuration object
         const configuration = {
             settings: layoutSettings,
             timestamp: new Date().toISOString(),
-            imageCount: images.length
+            //imageCount: images.length,
+            // Include the actual images data in the configuration
+            // images: images.map(img => ({
+            //     id: img.id,
+            //     src: img.src,
+            //     width: img.width,
+            //     height: img.height,
+            //     // Include any other properties needed for reconstruction
+            //     // but avoid including large data like the actual image data if possible
+            //     title: img.title,
+            //     description: img.description,
+            //     // Add any other metadata needed
+            // }))
         };
 
         // Convert to JSON
@@ -46,27 +61,72 @@ export const saveLayoutConfiguration = (layoutSettings, images) => {
 };
 
 /**
- * Loads a configuration from a JSON file
- * @param {File} file - The configuration file
+ * Opens a file dialog, loads a configuration file, and applies the settings
+ * @param {Function} applyCallback - Callback to apply the loaded settings
  * @returns {Promise<Object>} The parsed configuration
  */
-export const loadLayoutConfiguration = async (file) => {
+export const loadLayoutConfiguration = async (applyCallback) => {
     return new Promise((resolve, reject) => {
-        const reader = new FileReader();
+        try {
+            // Create a file input element
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.json';
+            fileInput.style.display = 'none';
+            document.body.appendChild(fileInput);
 
-        reader.onload = (event) => {
-            try {
-                const configuration = JSON.parse(event.target.result);
-                resolve(configuration);
-            } catch (error) {
-                reject(new Error('Invalid configuration file format'));
-            }
-        };
+            // Handle file selection
+            fileInput.onchange = (event) => {
+                const file = event.target.files[0];
+                if (!file) {
+                    document.body.removeChild(fileInput);
+                    return reject(new Error('No file selected'));
+                }
 
-        reader.onerror = () => {
-            reject(new Error('Failed to read configuration file'));
-        };
+                const reader = new FileReader();
 
-        reader.readAsText(file);
+                reader.onload = (event) => {
+                    try {
+                        const configuration = JSON.parse(event.target.result);
+                        document.body.removeChild(fileInput);
+
+                        // Validate configuration
+                        if (!configuration.settings) {
+                            throw new Error('Invalid configuration: missing settings');
+                        }
+
+                        // Ensure images array exists
+                        // if (!configuration.images || !Array.isArray(configuration.images)) {
+                        //     configuration.images = [];
+                        //     console.warn('Configuration loaded without images array');
+                        // }
+
+                        // Apply the configuration if a callback was provided
+                        if (typeof applyCallback === 'function') {
+                            applyCallback(configuration);
+                        }
+
+                        // Return the loaded configuration
+                        resolve(configuration);
+                    } catch (error) {
+                        document.body.removeChild(fileInput);
+                        reject(new Error(`Invalid configuration file format: ${error.message}`));
+                    }
+                };
+
+                reader.onerror = () => {
+                    document.body.removeChild(fileInput);
+                    reject(new Error('Failed to read configuration file'));
+                };
+
+                reader.readAsText(file);
+            };
+
+            // Open the file dialog
+            fileInput.click();
+
+        } catch (error) {
+            reject(new Error(`Failed to open file dialog: ${error.message}`));
+        }
     });
 }; 

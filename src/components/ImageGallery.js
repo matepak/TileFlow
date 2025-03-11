@@ -6,7 +6,7 @@ import useContainerWidth from '../hooks/useContainerWidth';
 import useCleanupObjectUrls from '../hooks/useCleanupObjectUrls';
 import { handleImageUpload } from '../utils/imageUploadHandler';
 import { sortImages } from '../utils/sortUtils';
-import { saveLayoutConfiguration as saveConfig } from '../utils/configUtils';
+import { saveLayoutConfiguration as saveConfig, loadLayoutConfiguration as loadConfig } from '../utils/configUtils';
 import GalleryDisplay from './GalleryDisplay';
 import MainControls from './MainControls';
 import ExportPanel from './ExportPanel';
@@ -53,6 +53,14 @@ const ImageGallery = () => {
     // Save the current layout configuration as JSON
     const saveLayoutConfiguration = () => {
         saveConfig(layoutSettings, images);
+    };
+
+    // load layout configuration
+    const loadLayoutConfiguration = () => {
+        loadConfig(applyLayoutConfiguration => {
+            setLayoutSettings(applyLayoutConfiguration.settings);
+            //setImages(applyLayoutConfiguration.images);
+        });
     };
 
     // Update image label and re-sort images
@@ -278,6 +286,8 @@ const ImageGallery = () => {
                         handleLastRowBehaviorChange={handleLastRowBehaviorChange}
                         handlePreventUpscalingChange={handlePreventUpscalingChange}
                         handleBackgroundColorChange={handleBackgroundColorChange}
+                        saveLayoutConfiguration={saveLayoutConfiguration}
+                        loadLayoutConfiguration={loadLayoutConfiguration}
                     />
                 )}
 
@@ -308,7 +318,6 @@ const ImageGallery = () => {
                     <ExportPanel
                         layoutSettings={layoutSettings}
                         handleDpiChange={handleDpiChange}
-                        saveLayoutConfiguration={saveLayoutConfiguration}
                         galleryRef={galleryRef}
                         images={images}
                         isSaving={isSaving}

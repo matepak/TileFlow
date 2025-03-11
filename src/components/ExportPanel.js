@@ -4,11 +4,10 @@ import SaveGalleryImage from './SaveGalleryImage';
 const ExportPanel = ({
     layoutSettings,
     handleDpiChange,
-    saveLayoutConfiguration,
     galleryRef,
     images,
     isSaving,
-    setIsSaving
+    setIsSaving,
 }) => {
     return (
         <div className="panel-content">
@@ -76,14 +75,6 @@ const ExportPanel = ({
                 setIsSaving={setIsSaving}
                 dpi={layoutSettings.export.dpi}
             />
-
-            <button
-                onClick={saveLayoutConfiguration}
-                className="action-button config-button"
-                disabled={images.length === 0}
-            >
-                Save Configuration
-            </button>
 
             <div className="export-info">
                 <p className="info-text">

@@ -9,7 +9,9 @@ const LayoutSettingsPanel = ({
     handleImageSpacingChange,
     handleLastRowBehaviorChange,
     handlePreventUpscalingChange,
-    handleBackgroundColorChange
+    handleBackgroundColorChange,
+    saveLayoutConfiguration,
+    loadLayoutConfiguration,
 }) => {
     return (
         <div className="panel-content">
@@ -112,6 +114,20 @@ const LayoutSettingsPanel = ({
                     className="color-picker"
                 />
             </div>
+
+            <button
+                onClick={saveLayoutConfiguration}
+                className="action-button config-button"
+            >
+                Save Layout
+            </button>
+
+            <button
+                onClick={loadLayoutConfiguration}
+                className="action-button config-button"
+            >
+                Load Layout
+            </button>
         </div>
     );
 };
