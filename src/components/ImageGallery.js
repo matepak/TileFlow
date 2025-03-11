@@ -1,5 +1,5 @@
-import React, { useState, useRef, useCallback } from 'react';
 import './ImageGallery.css'; // We'll create this CSS file separately
+import React, { useState, useRef, useCallback } from 'react';
 import logo from '../assets/logo.png'; // Add this import at the top
 import { defaultLayoutSettings } from '../constants/defaultSettings';
 import useContainerWidth from '../hooks/useContainerWidth';
