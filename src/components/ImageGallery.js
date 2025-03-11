@@ -13,6 +13,7 @@ import SortingPanel from './SortingPanel';
 import LabelSettingsPanel from './LabelSettingsPanel';
 import LayoutSettingsPanel from './RowLayoutSettingsPanel';
 import PackeryDisplay from './PackeryDisplay';
+import PackeryLayoutSettingsPanel from './PackeryLayoutSettingsPanel';
 
 const ImageGallery = () => {
     const [images, setImages] = useState([]);
@@ -69,11 +70,6 @@ const ImageGallery = () => {
     const handleRowHeightChange = (e) => {
         const rowHeight = parseInt(e.target.value);
         setLayoutSettings({ ...layoutSettings, rowHeight });
-    };
-
-    const handleRowSpacingChange = (e) => {
-        const rowSpacing = parseInt(e.target.value);
-        setLayoutSettings({ ...layoutSettings, rowSpacing });
     };
 
     const handleImageSpacingChange = (e) => {
@@ -283,18 +279,28 @@ const ImageGallery = () => {
                         images={images}
                     />
 
-                    {activeTab === 'layout' && (
+                    {activeTab === 'layout' && layoutType === 'row' && (
                         <LayoutSettingsPanel
                             layoutSettings={layoutSettings}
                             onRowHeightChange={handleRowHeightChange}
-                            onRowSpacingChange={handleRowSpacingChange}
                             onImageSpacingChange={handleImageSpacingChange}
                             onLastRowBehaviorChange={handleLastRowBehaviorChange}
                             onPreventUpscalingChange={handlePreventUpscalingChange}
                             onBackgroundColorChange={handleBackgroundColorChange}
                             onForceImagesPerRowToggle={handleForceImagesPerRowToggle}
                             onImagesPerRowChange={handleImagesPerRowChange}
-                            isPackeryLayout={layoutType === 'packery'}
+                        />
+                    )}
+
+                    {activeTab === 'layout' && layoutType === 'packery' && (
+                        <PackeryLayoutSettingsPanel
+                            layoutSettings={layoutSettings}
+                            onRowHeightChange={handleRowHeightChange}
+                            onImageSpacingChange={handleImageSpacingChange}
+                            onPreventUpscalingChange={handlePreventUpscalingChange}
+                            onBackgroundColorChange={handleBackgroundColorChange}
+                            onForceImagesPerRowToggle={handleForceImagesPerRowToggle}
+                            onImagesPerRowChange={handleImagesPerRowChange}
                         />
                     )}
 
