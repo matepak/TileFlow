@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import './ImageGallery.css'; // We'll create this CSS file separately
 import logo from '../assets/logo.png'; // Add this import at the top
 import { defaultLayoutSettings } from '../constants/defaultSettings';
@@ -13,7 +13,6 @@ import ExportPanel from './ExportPanel';
 import SortingPanel from './SortingPanel';
 import LabelSettingsPanel from './LabelSettingsPanel';
 import LayoutSettingsPanel from './LayoutSettingsPanel';
-import { calculateFixedImagesPerRowLayout, calculateRowBasedLayout } from '../utils/layoutCalculator';
 import useLayoutCalculator from '../hooks/useLayoutCalculator';
 
 const ImageGallery = () => {
