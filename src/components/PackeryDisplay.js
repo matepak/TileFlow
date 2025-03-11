@@ -3,7 +3,7 @@ import usePackery from '../hooks/usePackery';
 import { hexToRgba } from '../utils/imageUtils';
 import './ImageGallery.css'; // Reuse existing styles
 
-const PackeryGallery = ({
+const PackeryDisplay = ({
     images,
     layoutSettings,
     updateImageLabel,
@@ -190,4 +190,4 @@ const PackeryGallery = ({
     );
 };
 
-export default PackeryGallery; 
+export default PackeryDisplay; 

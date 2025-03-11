@@ -2,19 +2,17 @@ import './ImageGallery.css';
 import React, { useState, useRef, useCallback } from 'react';
 import logo from '../assets/logo.png'; // Add this import at the top
 import { defaultLayoutSettings } from '../constants/defaultSettings';
-import useContainerWidth from '../hooks/useContainerWidth';
 import useCleanupObjectUrls from '../hooks/useCleanupObjectUrls';
 import { handleImageUpload } from '../utils/imageUploadHandler';
 import { sortImages } from '../utils/sortUtils';
 import { saveLayoutConfiguration as saveConfig, loadLayoutConfiguration as loadConfig } from '../utils/configUtils';
-import GalleryDisplay from './RowDisplay';
+import RowDisplay from './RowDisplay';
 import MainControls from './MainControls';
 import ExportPanel from './ExportPanel';
 import SortingPanel from './SortingPanel';
 import LabelSettingsPanel from './LabelSettingsPanel';
 import LayoutSettingsPanel from './LayoutSettingsPanel';
-import useLayoutCalculator from '../hooks/useLayoutCalculator';
-import PackeryGallery from './PackeryDisplay';
+import PackeryDisplay from './PackeryDisplay';
 
 const ImageGallery = () => {
     const [images, setImages] = useState([]);
@@ -26,7 +24,6 @@ const ImageGallery = () => {
     const containerRef = useRef(null);
     const galleryRef = useRef(null);
     const fileInputRef = useRef(null);
-    const containerWidth = useContainerWidth(containerRef, layoutSettings.containerPadding);
 
     const onImageUpload = async (event) => {
         await handleImageUpload(
@@ -42,16 +39,6 @@ const ImageGallery = () => {
     const sortImagesCallback = useCallback((imagesToSort) => {
         return sortImages(imagesToSort, layoutSettings.sorting);
     }, [layoutSettings.sorting]);
-
-    // Always call the hook, but disable it when not using row layout
-    useLayoutCalculator(
-        images,
-        setImages,
-        containerWidth,
-        layoutSettings,
-        sortImagesCallback,
-        layoutType !== 'row' // Disable when not using row layout
-    );
 
     // Save the current layout configuration as JSON
     const saveLayoutConfiguration = () => {
@@ -361,7 +348,7 @@ const ImageGallery = () => {
 
                 {/* Conditional rendering based on layout type */}
                 {layoutType === 'row' ? (
-                    <GalleryDisplay
+                    <RowDisplay
                         images={images}
                         imagesByRow={imagesByRow}
                         layoutSettings={layoutSettings}
@@ -370,9 +357,11 @@ const ImageGallery = () => {
                         fileInputRef={fileInputRef}
                         updateImageLabel={updateImageLabel}
                         removeImage={removeImage}
+                        setImages={setImages}
+                        sortImagesCallback={sortImagesCallback}
                     />
                 ) : (
-                    <PackeryGallery
+                    <PackeryDisplay
                         images={images}
                         layoutSettings={layoutSettings}
                         updateImageLabel={updateImageLabel}

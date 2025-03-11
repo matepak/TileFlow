@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { calculateFixedImagesPerRowLayout, calculateRowBasedLayout } from '../utils/layoutCalculator';
 
-const useLayoutCalculator = (
+const useRow = (
     images,
     setImages,
     containerWidth,
@@ -168,4 +168,4 @@ const useLayoutCalculator = (
     ]);
 };
 
-export default useLayoutCalculator; 
+export default useRow; 
