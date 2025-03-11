@@ -1,0 +1,25 @@
+# Force CSS content type and handling
+<IfModule mod_mime.c>
+    AddType text/css .css
+</IfModule>
+
+# Prevent empty CSS caching
+<FilesMatch "\.css$">
+    FileETag None
+    <IfModule mod_headers.c>
+        Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "Wed, 11 Jan 1984 05:00:00 GMT"
+    </IfModule>
+</FilesMatch>
+
+# If using React Router, ensure proper routing
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /apps/tiling_img/
+    RewriteRule ^index\.html$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-l
+    RewriteRule . /apps/tiling_img/index.html [L]
+</IfModule> 
