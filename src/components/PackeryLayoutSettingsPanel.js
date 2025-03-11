@@ -1,25 +1,22 @@
 import React from 'react';
 
-const LayoutSettingsPanel = ({
+const PackeryLayoutSettingsPanel = ({
     layoutSettings,
     onRowHeightChange,
-    onRowSpacingChange,
     onImageSpacingChange,
-    onLastRowBehaviorChange,
     onPreventUpscalingChange,
     onBackgroundColorChange,
     onForceImagesPerRowToggle,
     onImagesPerRowChange,
-    isPackeryLayout = false
 }) => {
     return (
         <div className="settings-panel layout-settings">
             <h3 className="panel-title">Layout Settings</h3>
 
-            {/* Row Height / Base Height */}
+            {/* Base Height */}
             <div className="settings-group">
                 <label className="settings-label" htmlFor="rowHeight">
-                    {isPackeryLayout ? 'Base Height' : 'Row Height'} (px):
+                    Base Height (px):
                 </label>
                 <input
                     id="rowHeight"
@@ -33,7 +30,7 @@ const LayoutSettingsPanel = ({
                 <span className="value-display">{layoutSettings.rowHeight}px</span>
             </div>
 
-            {/* Force Images Per Row */}
+            {/* Fixed Columns */}
             <div className="settings-group">
                 <div className="checkbox-wrapper">
                     <input
@@ -44,14 +41,14 @@ const LayoutSettingsPanel = ({
                         className="checkbox-input"
                     />
                     <label className="settings-label checkbox-label" htmlFor="forceImagesPerRow">
-                        {isPackeryLayout ? 'Fixed columns' : 'Fixed images per row'}
+                        Fixed columns
                     </label>
                 </div>
 
                 {layoutSettings.forceImagesPerRow.enabled && (
                     <div className="sub-setting">
                         <label className="settings-label" htmlFor="imagesPerRow">
-                            {isPackeryLayout ? 'Number of columns:' : 'Images per row:'}
+                            Number of columns:
                         </label>
                         <input
                             id="imagesPerRow"
@@ -83,25 +80,6 @@ const LayoutSettingsPanel = ({
                 />
                 <span className="value-display">{layoutSettings.imageSpacing}px</span>
             </div>
-
-            {/* Last Row Behavior (only show if not using Packery layout) */}
-            {!isPackeryLayout && (
-                <div className="settings-group">
-                    <label className="settings-label" htmlFor="lastRowBehavior">
-                        Last Row Behavior:
-                    </label>
-                    <select
-                        id="lastRowBehavior"
-                        value={layoutSettings.lastRowBehavior}
-                        onChange={onLastRowBehaviorChange}
-                        className="select-input"
-                    >
-                        <option value="justify">Justify</option>
-                        <option value="left">Left Align</option>
-                        <option value="fill">Fill Width</option>
-                    </select>
-                </div>
-            )}
 
             {/* Prevent Upscaling */}
             <div className="settings-group">
@@ -137,4 +115,4 @@ const LayoutSettingsPanel = ({
     );
 };
 
-export default LayoutSettingsPanel; 
+export default PackeryLayoutSettingsPanel;

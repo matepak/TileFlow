@@ -11,7 +11,7 @@ import MainControls from './MainControls';
 import ExportPanel from './ExportPanel';
 import SortingPanel from './SortingPanel';
 import LabelSettingsPanel from './LabelSettingsPanel';
-import LayoutSettingsPanel from './LayoutSettingsPanel';
+import LayoutSettingsPanel from './RowLayoutSettingsPanel';
 import PackeryDisplay from './PackeryDisplay';
 
 const ImageGallery = () => {
