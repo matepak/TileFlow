@@ -1,11 +1,11 @@
 # TileFlow
 
-TileFlow is an advanced image gallery application that provides powerful layout customization, image organization, and export capabilities.
+TileFlow is an image tiled gallery application that provides tiled layout customization, image organization, and export capabilities.
 
 
 ## Features
 
-- **Row-Based Layout Engine**: Create beautiful image grids with customizable row heights and spacing
+- **Row-Based Layout Engine**: Create image grids with customizable row heights and spacing
 - **Smart Layout Options**: Automatic layout calculation with options for last row behavior
 - **Image Management**: Easily upload, arrange, and remove images
 - **Custom Labels**: Add and edit labels for each image with customizable styling
@@ -81,8 +81,6 @@ TileFlow is built with modern web technologies:
 - **React**: Frontend UI library
 - **CSS**: Custom styling
 - **Canvas API**: For high-quality image export
-
-The layout engine uses advanced algorithms to calculate optimal image placement based on aspect ratios and target dimensions, ensuring visually pleasing results.
 
 ## Contributing
 
