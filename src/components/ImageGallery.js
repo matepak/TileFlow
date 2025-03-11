@@ -7,14 +7,14 @@ import useCleanupObjectUrls from '../hooks/useCleanupObjectUrls';
 import { handleImageUpload } from '../utils/imageUploadHandler';
 import { sortImages } from '../utils/sortUtils';
 import { saveLayoutConfiguration as saveConfig, loadLayoutConfiguration as loadConfig } from '../utils/configUtils';
-import GalleryDisplay from './GalleryDisplay';
+import GalleryDisplay from './RowDisplay';
 import MainControls from './MainControls';
 import ExportPanel from './ExportPanel';
 import SortingPanel from './SortingPanel';
 import LabelSettingsPanel from './LabelSettingsPanel';
 import LayoutSettingsPanel from './LayoutSettingsPanel';
 import useLayoutCalculator from '../hooks/useLayoutCalculator';
-import PackeryGallery from './PackeryGallery';
+import PackeryGallery from './PackeryDisplay';
 
 const ImageGallery = () => {
     const [images, setImages] = useState([]);
