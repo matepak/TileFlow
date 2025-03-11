@@ -187,7 +187,7 @@ const SaveGalleryImage = ({
             disabled={isSaving || images.length === 0}
             title={`Save with ${dpi} DPI resolution`}
         >
-            {isSaving ? 'Saving...' : 'Save as Image'}
+            {isSaving ? 'Saving...' : 'Save Image'}
         </button>
     );
 };
