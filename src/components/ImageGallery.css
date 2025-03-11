@@ -68,6 +68,7 @@
 
 /* Settings Panel */
 .settings-panel {
+    width: 100%;
     max-width: 64rem;
     margin-bottom: 1.5rem;
 }
@@ -85,7 +86,6 @@
 .setting-group {
     display: flex;
     flex-direction: column;
-    width: 100%;
 }
 
 .setting-label {
