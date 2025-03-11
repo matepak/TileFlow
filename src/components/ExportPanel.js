@@ -65,22 +65,28 @@ const ExportPanel = ({
                         Lower DPI is better for web or screen viewing.
                     </p>
                 </div>
+
+                <div className="export-info">
+                    <p className="info-text">
+                        The "Save as Image" option will create a PNG file of your gallery layout, including all images, spacing, and labels.
+                    </p>
+                </div>
+
+
             </div>
 
-            <SaveGalleryImage
-                galleryRef={galleryRef}
-                images={images}
-                layoutSettings={layoutSettings}
-                isSaving={isSaving}
-                setIsSaving={setIsSaving}
-                dpi={layoutSettings.export.dpi}
-            />
-
-            <div className="export-info">
-                <p className="info-text">
-                    The "Save as Image" option will create a PNG file of your gallery layout, including all images, spacing, and labels.
-                </p>
+            <div className="export-button-container">
+                <SaveGalleryImage
+                    galleryRef={galleryRef}
+                    images={images}
+                    layoutSettings={layoutSettings}
+                    isSaving={isSaving}
+                    setIsSaving={setIsSaving}
+                    dpi={layoutSettings.export.dpi}
+                />
             </div>
+
+
         </div>
     );
 };
