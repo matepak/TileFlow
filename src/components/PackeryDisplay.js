@@ -36,32 +36,6 @@ const PackeryDisplay = ({
         }
     }, [images.length]);
 
-    // Calculate aspect ratio for each image to maintain proportions
-    const calculateItemStyle = (image) => {
-        const aspectRatio = image.originalWidth / image.originalHeight;
-
-        if (layoutSettings.forceImagesPerRow.enabled) {
-            // Fixed width based on images per row
-            const containerWidth = containerRef.current?.offsetWidth || 0;
-            const availableWidth = containerWidth - (layoutSettings.imageSpacing * (layoutSettings.forceImagesPerRow.count - 1));
-            const width = availableWidth / layoutSettings.forceImagesPerRow.count;
-            const height = width / aspectRatio;
-
-            return {
-                width: `${width}px`,
-                height: `${height}px`
-            };
-        } else {
-            // Use row height as base and calculate width
-            const width = layoutSettings.rowHeight * aspectRatio;
-
-            return {
-                width: `${width}px`,
-                height: `${layoutSettings.rowHeight}px`
-            };
-        }
-    };
-
     // Reference callback for draggable items
     const itemRef = (element) => {
         if (element && enableDrag) {
@@ -123,7 +97,6 @@ const PackeryDisplay = ({
                                 key={image.id}
                                 ref={itemRef}
                                 className={`gallery-item ${enableDrag ? 'draggable' : ''}`}
-                                style={calculateItemStyle(image)}
                             >
                                 <img
                                     src={image.src}

@@ -2,72 +2,18 @@ import React from 'react';
 
 const PackeryLayoutSettingsPanel = ({
     layoutSettings,
-    onRowHeightChange,
     onImageSpacingChange,
     onPreventUpscalingChange,
     onBackgroundColorChange,
-    onForceImagesPerRowToggle,
-    onImagesPerRowChange,
 }) => {
     return (
         <div className="settings-panel layout-settings">
             <h3 className="panel-title">Layout Settings</h3>
 
-            {/* Base Height */}
-            <div className="settings-group">
-                <label className="settings-label" htmlFor="rowHeight">
-                    Base Height (px):
-                </label>
-                <input
-                    id="rowHeight"
-                    type="range"
-                    min="50"
-                    max="500"
-                    value={layoutSettings.rowHeight}
-                    onChange={onRowHeightChange}
-                    className="slider-input"
-                />
-                <span className="value-display">{layoutSettings.rowHeight}px</span>
-            </div>
-
-            {/* Fixed Columns */}
-            <div className="settings-group">
-                <div className="checkbox-wrapper">
-                    <input
-                        id="forceImagesPerRow"
-                        type="checkbox"
-                        checked={layoutSettings.forceImagesPerRow.enabled}
-                        onChange={onForceImagesPerRowToggle}
-                        className="checkbox-input"
-                    />
-                    <label className="settings-label checkbox-label" htmlFor="forceImagesPerRow">
-                        Fixed columns
-                    </label>
-                </div>
-
-                {layoutSettings.forceImagesPerRow.enabled && (
-                    <div className="sub-setting">
-                        <label className="settings-label" htmlFor="imagesPerRow">
-                            Number of columns:
-                        </label>
-                        <input
-                            id="imagesPerRow"
-                            type="range"
-                            min="1"
-                            max="10"
-                            value={layoutSettings.forceImagesPerRow.count}
-                            onChange={onImagesPerRowChange}
-                            className="slider-input"
-                        />
-                        <span className="value-display">{layoutSettings.forceImagesPerRow.count}</span>
-                    </div>
-                )}
-            </div>
-
             {/* Image Spacing */}
             <div className="settings-group">
                 <label className="settings-label" htmlFor="imageSpacing">
-                    Spacing Between Images and Rows (px):
+                    Spacing Between Images (px):
                 </label>
                 <input
                     id="imageSpacing"
@@ -109,7 +55,6 @@ const PackeryLayoutSettingsPanel = ({
                     onChange={onBackgroundColorChange}
                     className="color-input"
                 />
-                <span className="value-display">{layoutSettings.backgroundColor}</span>
             </div>
         </div>
     );

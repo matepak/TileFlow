@@ -29,9 +29,6 @@ const usePackery = ({
         const packeryOptions = {
             // Core Packery options
             itemSelector: '.gallery-item',
-            columnWidth: layoutSettings.forceImagesPerRow.enabled
-                ? containerRef.current.offsetWidth / layoutSettings.forceImagesPerRow.count - layoutSettings.imageSpacing
-                : layoutSettings.rowHeight,
             gutter: layoutSettings.imageSpacing,
             percentPosition: true,
 
@@ -56,8 +53,7 @@ const usePackery = ({
                 packeryInstanceRef.current = null;
             }
         };
-    }, [containerRef, isEnabled, items.length, layoutSettings.forceImagesPerRow.enabled,
-        layoutSettings.forceImagesPerRow.count, layoutSettings.rowHeight, layoutSettings.imageSpacing,
+    }, [containerRef, isEnabled, items.length, layoutSettings.imageSpacing,
         layoutSettings.sorting.direction]);
 
     // Update layout when items or relevant settings change

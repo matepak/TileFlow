@@ -295,12 +295,9 @@ const ImageGallery = () => {
                     {activeTab === 'layout' && layoutType === 'packery' && (
                         <PackeryLayoutSettingsPanel
                             layoutSettings={layoutSettings}
-                            onRowHeightChange={handleRowHeightChange}
                             onImageSpacingChange={handleImageSpacingChange}
                             onPreventUpscalingChange={handlePreventUpscalingChange}
                             onBackgroundColorChange={handleBackgroundColorChange}
-                            onForceImagesPerRowToggle={handleForceImagesPerRowToggle}
-                            onImagesPerRowChange={handleImagesPerRowChange}
                         />
                     )}
 
