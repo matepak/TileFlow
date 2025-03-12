@@ -2,6 +2,10 @@
 
 TileFlow is an image tiled gallery application that provides tiled layout customization, image organization, and export capabilities.
 
+![TileFlow](tileflow.png)
+
+
+
 
 ## Features
 
