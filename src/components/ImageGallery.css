@@ -717,3 +717,141 @@
     display: flex;
     flex-direction: column;
 }
+
+/* Grid Layout Styles */
+.grid-sizer {
+    width: 25%;
+    height: 200px;
+}
+
+.gutter-sizer {
+    width: 10px;
+}
+
+.packery-container {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.gallery-item {
+    width: calc(25% - 10px);
+    /* Matches grid-sizer width minus gutter */
+    margin-bottom: 10px;
+}
+
+/* Grid Layout Settings Panel Styles */
+.grid-settings {
+    background-color: #f8f8f8;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.setting-item {
+    margin-bottom: 15px;
+}
+
+.setting-item:last-child {
+    margin-bottom: 0;
+}
+
+.select-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    color: #333;
+}
+
+.range-slider {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.setting-value {
+    display: inline-block;
+    min-width: 45px;
+    text-align: right;
+    margin-left: 10px;
+    color: #666;
+    font-size: 14px;
+}
+
+.settings-info {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f0f7ff;
+    border-left: 4px solid #4a90e2;
+    border-radius: 4px;
+}
+
+.info-text {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 14px;
+}
+
+.tips-list {
+    margin: 0;
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+.tips-list li {
+    margin-bottom: 5px;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.setting-divider {
+    height: 1px;
+    background-color: #ddd;
+    margin: 20px 0;
+}
+
+/* Responsive grid sizes */
+@media (max-width: 1200px) {
+
+    .grid-sizer,
+    .gallery-item {
+        width: 33.333%;
+    }
+
+    .gallery-item {
+        width: calc(33.333% - 10px);
+    }
+}
+
+@media (max-width: 768px) {
+
+    .grid-sizer,
+    .gallery-item {
+        width: 50%;
+    }
+
+    .gallery-item {
+        width: calc(50% - 10px);
+    }
+}
+
+@media (max-width: 480px) {
+
+    .grid-sizer,
+    .gallery-item {
+        width: 100%;
+    }
+
+    .gallery-item {
+        width: calc(100% - 10px);
+    }
+}

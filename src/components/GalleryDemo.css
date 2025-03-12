@@ -1,0 +1,34 @@
+.gallery-demo {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.gallery-demo h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.demo-description {
+    text-align: center;
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .gallery-demo {
+        padding: 1rem;
+    }
+
+    .gallery-demo h1 {
+        font-size: 1.5rem;
+    }
+
+    .demo-description {
+        font-size: 1rem;
+    }
+}

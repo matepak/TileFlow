@@ -14,6 +14,7 @@ import LabelSettingsPanel from './LabelSettingsPanel';
 import LayoutSettingsPanel from './RowLayoutSettingsPanel';
 import PackeryDisplay from './PackeryDisplay';
 import PackeryLayoutSettingsPanel from './PackeryLayoutSettingsPanel';
+import PackeryGallery from './PackeryGallery';
 
 const ImageGallery = () => {
     const [images, setImages] = useState([]);

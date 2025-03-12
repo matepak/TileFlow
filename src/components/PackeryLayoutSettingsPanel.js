@@ -10,6 +10,8 @@ const PackeryLayoutSettingsPanel = ({
         <div className="settings-panel layout-settings">
             <h3 className="panel-title">Layout Settings</h3>
 
+            <div className="setting-divider"></div>
+
             {/* Image Spacing */}
             <div className="settings-group">
                 <label className="settings-label" htmlFor="imageSpacing">
@@ -55,6 +57,17 @@ const PackeryLayoutSettingsPanel = ({
                     onChange={onBackgroundColorChange}
                     className="color-input"
                 />
+            </div>
+
+            <div className="settings-info">
+                <div className="info-text">
+                    <strong>Grid Layout Tips:</strong>
+                </div>
+                <ul className="tips-list">
+                    <li>Column width determines how many images fit in a row</li>
+                    <li>Row height affects the vertical size of image containers</li>
+                    <li>Gutter size controls the spacing between grid items</li>
+                </ul>
             </div>
         </div>
     );
