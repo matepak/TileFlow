@@ -10,6 +10,42 @@ const RowLayoutSettingsPanel = ({
     onForceImagesPerRowToggle,
     onImagesPerRowChange,
 }) => {
+    // Add handler functions to extract values from events
+    const handleRowHeight = (e) => {
+        const value = parseInt(e.target.value, 10);
+        onRowHeightChange(value);
+    };
+
+    const handleImageSpacing = (e) => {
+        const value = parseInt(e.target.value, 10);
+        onImageSpacingChange(value);
+    };
+
+    const handleLastRowBehavior = (e) => {
+        const value = e.target.value;
+        onLastRowBehaviorChange(value);
+    };
+
+    const handlePreventUpscaling = (e) => {
+        const checked = e.target.checked;
+        onPreventUpscalingChange(checked);
+    };
+
+    const handleBackgroundColor = (e) => {
+        const color = e.target.value;
+        onBackgroundColorChange(color);
+    };
+
+    const handleForceImagesPerRowToggle = (e) => {
+        const checked = e.target.checked;
+        onForceImagesPerRowToggle(checked);
+    };
+
+    const handleImagesPerRow = (e) => {
+        const value = parseInt(e.target.value, 10);
+        onImagesPerRowChange(value);
+    };
+
     return (
         <div className="settings-panel layout-settings">
             <h3 className="panel-title">Layout Settings</h3>
@@ -25,7 +61,7 @@ const RowLayoutSettingsPanel = ({
                     min="50"
                     max="500"
                     value={layoutSettings.rowHeight}
-                    onChange={onRowHeightChange}
+                    onChange={handleRowHeight}
                     className="slider-input"
                 />
                 <span className="value-display">{layoutSettings.rowHeight}px</span>
@@ -38,7 +74,7 @@ const RowLayoutSettingsPanel = ({
                         id="forceImagesPerRow"
                         type="checkbox"
                         checked={layoutSettings.forceImagesPerRow.enabled}
-                        onChange={onForceImagesPerRowToggle}
+                        onChange={handleForceImagesPerRowToggle}
                         className="checkbox-input"
                     />
                     <label className="settings-label checkbox-label" htmlFor="forceImagesPerRow">
@@ -57,7 +93,7 @@ const RowLayoutSettingsPanel = ({
                             min="1"
                             max="10"
                             value={layoutSettings.forceImagesPerRow.count}
-                            onChange={onImagesPerRowChange}
+                            onChange={handleImagesPerRow}
                             className="slider-input"
                         />
                         <span className="value-display">{layoutSettings.forceImagesPerRow.count}</span>
@@ -76,7 +112,7 @@ const RowLayoutSettingsPanel = ({
                     min="0"
                     max="50"
                     value={layoutSettings.imageSpacing}
-                    onChange={onImageSpacingChange}
+                    onChange={handleImageSpacing}
                     className="slider-input"
                 />
                 <span className="value-display">{layoutSettings.imageSpacing}px</span>
@@ -90,7 +126,7 @@ const RowLayoutSettingsPanel = ({
                 <select
                     id="lastRowBehavior"
                     value={layoutSettings.lastRowBehavior}
-                    onChange={onLastRowBehaviorChange}
+                    onChange={handleLastRowBehavior}
                     className="select-input"
                 >
                     <option value="justify">Justify</option>
@@ -106,7 +142,7 @@ const RowLayoutSettingsPanel = ({
                         id="preventUpscaling"
                         type="checkbox"
                         checked={layoutSettings.preventUpscaling}
-                        onChange={onPreventUpscalingChange}
+                        onChange={handlePreventUpscaling}
                         className="checkbox-input"
                     />
                     <label className="settings-label checkbox-label" htmlFor="preventUpscaling">
@@ -124,7 +160,7 @@ const RowLayoutSettingsPanel = ({
                     id="backgroundColor"
                     type="color"
                     value={layoutSettings.backgroundColor}
-                    onChange={onBackgroundColorChange}
+                    onChange={handleBackgroundColor}
                     className="color-input"
                 />
                 <span className="value-display">{layoutSettings.backgroundColor}</span>

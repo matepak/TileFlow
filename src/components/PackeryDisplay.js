@@ -3,6 +3,20 @@ import usePackery from '../hooks/usePackery';
 import { hexToRgba } from '../utils/imageUtils';
 import './ImageGallery.css'; // Reuse existing styles
 
+const defaultLayoutSettings = {
+    imageSpacing: 10,
+    preventUpscaling: false,
+    backgroundColor: '#ffffff',
+    forceImagesPerRow: {
+        enabled: false,
+        count: 4
+    },
+    sorting: {
+        direction: 'asc'
+    },
+    rowHeight: 200  // Add if you're using this
+};
+
 const PackeryDisplay = ({
     images,
     layoutSettings,
@@ -15,11 +29,14 @@ const PackeryDisplay = ({
     const [showItems, setShowItems] = useState(false);
     const [enableDrag, setEnableDrag] = useState(false);
 
+    // Add default value if layoutSettings is undefined
+    const settings = layoutSettings || defaultLayoutSettings;
+
     // Initialize Packery
     const { refreshLayout, setupDraggable } = usePackery({
         containerRef,
         items: images,
-        layoutSettings,
+        layoutSettings: settings,
         isEnabled: images.length > 0,
         isDraggable: enableDrag
     });
@@ -72,8 +89,8 @@ const PackeryDisplay = ({
                 }}
                 className="image-gallery packery-gallery"
                 style={{
-                    padding: layoutSettings.containerPadding,
-                    backgroundColor: layoutSettings.backgroundColor
+                    padding: settings.containerPadding,
+                    backgroundColor: settings.backgroundColor
                 }}
             >
                 {images.length === 0 ? (
@@ -97,6 +114,11 @@ const PackeryDisplay = ({
                                 key={image.id}
                                 ref={itemRef}
                                 className={`gallery-item ${enableDrag ? 'draggable' : ''}`}
+                                style={{
+                                    width: settings.forceImagesPerRow?.enabled
+                                        ? `${100 / (settings.forceImagesPerRow?.count || 4)}%`
+                                        : '25%'  // default to 4 columns
+                                }}
                             >
                                 <img
                                     src={image.src}
@@ -106,17 +128,17 @@ const PackeryDisplay = ({
                                 />
 
                                 {/* Image Label */}
-                                {layoutSettings.labels.enabled && image.label && (
+                                {settings.labels.enabled && image.label && (
                                     <div
                                         className="image-label"
                                         style={{
                                             backgroundColor: hexToRgba(
-                                                layoutSettings.labels.backgroundColor,
-                                                layoutSettings.labels.backgroundOpacity
+                                                settings.labels.backgroundColor,
+                                                settings.labels.backgroundOpacity
                                             ),
-                                            color: layoutSettings.labels.fontColor,
-                                            padding: `${layoutSettings.labels.padding}px`,
-                                            fontSize: `${layoutSettings.labels.fontSize}px`,
+                                            color: settings.labels.fontColor,
+                                            padding: `${settings.labels.padding}px`,
+                                            fontSize: `${settings.labels.fontSize}px`,
                                         }}
                                     >
                                         {image.label}
@@ -161,6 +183,10 @@ const PackeryDisplay = ({
             </div>
         </div>
     );
+};
+
+PackeryDisplay.defaultProps = {
+    layoutSettings: defaultLayoutSettings
 };
 
 export default PackeryDisplay; 

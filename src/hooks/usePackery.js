@@ -35,12 +35,21 @@ const usePackery = ({
             horizontalOrder: layoutSettings.sorting.direction === 'asc',
             transitionDuration: '0.2s',
             initLayout: true,
+            columnWidth: '.gallery-item',
             resize: true,
-
         };
 
         // Create new Packery instance
         packeryInstanceRef.current = new Packery(containerRef.current, packeryOptions);
+
+        // Set the width of gallery items based on the number of columns
+        if (layoutSettings.forceImagesPerRow.enabled) {
+            const items = containerRef.current.querySelectorAll('.gallery-item');
+            const width = `${100 / layoutSettings.forceImagesPerRow.count}%`;
+            items.forEach(item => {
+                item.style.width = width;
+            });
+        }
 
         // Handle image loading with imagesLoaded
         imagesLoaded(containerRef.current).on('progress', () => {
@@ -54,7 +63,7 @@ const usePackery = ({
             }
         };
     }, [containerRef, isEnabled, items.length, layoutSettings.imageSpacing,
-        layoutSettings.sorting.direction]);
+        layoutSettings.sorting.direction, layoutSettings.forceImagesPerRow.count]);
 
     // Update layout when items or relevant settings change
     useEffect(() => {

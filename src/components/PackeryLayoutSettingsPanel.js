@@ -5,10 +5,38 @@ const PackeryLayoutSettingsPanel = ({
     onImageSpacingChange,
     onPreventUpscalingChange,
     onBackgroundColorChange,
+    onImagesPerRowChange,
+    onForceImagesPerRowChange
 }) => {
+    // Add handler functions to extract values from events
+    const handleImageSpacing = (e) => {
+        const value = parseInt(e.target.value, 10);
+        onImageSpacingChange(value);
+    };
+
+    const handlePreventUpscaling = (e) => {
+        const checked = e.target.checked;
+        onPreventUpscalingChange(checked);
+    };
+
+    const handleBackgroundColor = (e) => {
+        const color = e.target.value;
+        onBackgroundColorChange(color);
+    };
+
+    const handleImagesPerRow = (e) => {
+        const value = parseInt(e.target.value, 10);
+        onImagesPerRowChange(value);
+    };
+
+    const handleForceImagesPerRow = (e) => {
+        const checked = e.target.checked;
+        onForceImagesPerRowChange(checked);
+    };
+
     return (
         <div className="settings-panel layout-settings">
-            <h3 className="panel-title">Layout Settings</h3>
+            <h3 className="panel-title">Packery Layout Settings</h3>
 
             <div className="setting-divider"></div>
 
@@ -23,10 +51,40 @@ const PackeryLayoutSettingsPanel = ({
                     min="0"
                     max="50"
                     value={layoutSettings.imageSpacing}
-                    onChange={onImageSpacingChange}
+                    onChange={handleImageSpacing}
                     className="slider-input"
                 />
                 <span className="value-display">{layoutSettings.imageSpacing}px</span>
+            </div>
+
+            {/* Images Per Row Control */}
+            <div className="settings-group">
+                <label className="settings-label" htmlFor="imagesPerRow">
+                    Images Per Row:
+                </label>
+                <div className="input-group">
+                    <input
+                        id="imagesPerRow"
+                        type="number"
+                        min="1"
+                        max="12"
+                        value={layoutSettings.forceImagesPerRow?.count || 4}
+                        onChange={handleImagesPerRow}
+                        className="number-input"
+                    />
+                    <div className="checkbox-wrapper">
+                        <input
+                            id="forceImagesPerRow"
+                            type="checkbox"
+                            checked={layoutSettings.forceImagesPerRow?.enabled || false}
+                            onChange={handleForceImagesPerRow}
+                            className="checkbox-input"
+                        />
+                        <label className="settings-label checkbox-label" htmlFor="forceImagesPerRow">
+                            Force Images Per Row
+                        </label>
+                    </div>
+                </div>
             </div>
 
             {/* Prevent Upscaling */}
@@ -36,7 +94,7 @@ const PackeryLayoutSettingsPanel = ({
                         id="preventUpscaling"
                         type="checkbox"
                         checked={layoutSettings.preventUpscaling}
-                        onChange={onPreventUpscalingChange}
+                        onChange={handlePreventUpscaling}
                         className="checkbox-input"
                     />
                     <label className="settings-label checkbox-label" htmlFor="preventUpscaling">
@@ -54,7 +112,7 @@ const PackeryLayoutSettingsPanel = ({
                     id="backgroundColor"
                     type="color"
                     value={layoutSettings.backgroundColor}
-                    onChange={onBackgroundColorChange}
+                    onChange={handleBackgroundColor}
                     className="color-input"
                 />
             </div>

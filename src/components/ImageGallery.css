@@ -528,6 +528,8 @@
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 25%;
+    /* Default width for 4 columns */
 }
 
 .gallery-item:hover {
@@ -854,4 +856,17 @@
     .gallery-item {
         width: calc(100% - 10px);
     }
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.number-input {
+    width: 60px;
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }

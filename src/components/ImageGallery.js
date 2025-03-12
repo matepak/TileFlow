@@ -67,47 +67,71 @@ const ImageGallery = () => {
     useCleanupObjectUrls(images);
 
     // Layout Settings Handlers
-    const handleRowHeightChange = (e) => {
-        const rowHeight = parseInt(e.target.value);
-        setLayoutSettings({ ...layoutSettings, rowHeight });
+    const handleRowHeightChange = (value) => {
+        setLayoutSettings(prev => ({
+            ...prev,
+            rowHeight: value
+        }));
     };
 
-    const handleImageSpacingChange = (e) => {
-        const imageSpacing = parseInt(e.target.value);
-        const rowSpacing = parseInt(e.target.value);
-        setLayoutSettings({ ...layoutSettings, rowSpacing, imageSpacing });
+    const handleImageSpacingChange = (value) => {
+        setLayoutSettings(prev => ({
+            ...prev,
+            rowSpacing: value,
+            imageSpacing: value
+        }));
     };
 
-    const handleLastRowBehaviorChange = (e) => {
-        const lastRowBehavior = e.target.value;
-        setLayoutSettings({ ...layoutSettings, lastRowBehavior });
+    const handleLastRowBehaviorChange = (value) => {
+        setLayoutSettings(prev => ({
+            ...prev,
+            lastRowBehavior: value
+        }));
     };
 
-    const handlePreventUpscalingChange = (e) => {
-        const preventUpscaling = e.target.checked;
-        setLayoutSettings({ ...layoutSettings, preventUpscaling });
+    const handlePreventUpscalingChange = (checked) => {
+        setLayoutSettings(prev => ({
+            ...prev,
+            preventUpscaling: checked
+        }));
     };
 
-    const handleBackgroundColorChange = (e) => {
-        const backgroundColor = e.target.value;
-        setLayoutSettings({ ...layoutSettings, backgroundColor });
+    const handleBackgroundColorChange = (color) => {
+        setLayoutSettings(prev => ({
+            ...prev,
+            backgroundColor: color
+        }));
     };
 
     // Force Images Per Row Settings Handlers
-    const handleForceImagesPerRowToggle = (e) => {
-        const enabled = e.target.checked;
-        setLayoutSettings({
-            ...layoutSettings,
-            forceImagesPerRow: { ...layoutSettings.forceImagesPerRow, enabled }
-        });
+    const handleForceImagesPerRowToggle = (checked) => {
+        setLayoutSettings(prev => ({
+            ...prev,
+            forceImagesPerRow: {
+                ...prev.forceImagesPerRow,
+                enabled: checked
+            }
+        }));
     };
 
-    const handleImagesPerRowChange = (e) => {
-        const count = parseInt(e.target.value);
-        setLayoutSettings({
-            ...layoutSettings,
-            forceImagesPerRow: { ...layoutSettings.forceImagesPerRow, count }
-        });
+    const handleImagesPerRowChange = (value) => {
+        setLayoutSettings(prev => ({
+            ...prev,
+            forceImagesPerRow: {
+                ...prev.forceImagesPerRow,
+                count: value
+            }
+        }));
+    };
+
+    const handleForceImagesPerRowChange = (checked) => {
+        setLayoutSettings(prev => ({
+            ...prev,
+            forceImagesPerRow: {
+                ...prev.forceImagesPerRow,
+                enabled: checked
+            }
+        }));
     };
 
     // Sorting Settings Handlers
@@ -298,6 +322,8 @@ const ImageGallery = () => {
                             onImageSpacingChange={handleImageSpacingChange}
                             onPreventUpscalingChange={handlePreventUpscalingChange}
                             onBackgroundColorChange={handleBackgroundColorChange}
+                            onImagesPerRowChange={handleImagesPerRowChange}
+                            onForceImagesPerRowChange={handleForceImagesPerRowChange}
                         />
                     )}
 
