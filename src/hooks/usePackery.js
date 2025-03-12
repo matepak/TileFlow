@@ -31,12 +31,12 @@ const usePackery = ({
             itemSelector: '.gallery-item',
             gutter: layoutSettings.imageSpacing,
             percentPosition: true,
-
             // Additional options that can be customized
             horizontalOrder: layoutSettings.sorting.direction === 'asc',
             transitionDuration: '0.2s',
             initLayout: true,
-            resize: true
+            resize: true,
+
         };
 
         // Create new Packery instance
