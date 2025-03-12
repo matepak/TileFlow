@@ -85,6 +85,9 @@ TileFlow is built with modern web technologies:
 - **React**: Frontend UI library
 - **CSS**: Custom styling
 - **Canvas API**: For high-quality image export
+- **Packery**: For the image layout engine
+- **Draggabilly**: For the image drag and drop functionality
+
 
 ## Contributing
 
