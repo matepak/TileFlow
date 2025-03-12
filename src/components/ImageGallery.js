@@ -73,7 +73,6 @@ const ImageGallery = () => {
             rowHeight: value
         }));
     };
-    };
 
     const handleImageSpacingChange = (value) => {
         setLayoutSettings(prev => ({
@@ -307,7 +306,7 @@ const ImageGallery = () => {
                     {activeTab === 'layout' && layoutType === 'row' && (
                         <LayoutSettingsPanel
                             layoutSettings={layoutSettings}
-                            onRowHeightChange={handleRowHeightChange}
+                            onRowHeightChange={onRowHeightChange}
                             onImageSpacingChange={handleImageSpacingChange}
                             onLastRowBehaviorChange={handleLastRowBehaviorChange}
                             onPreventUpscalingChange={handlePreventUpscalingChange}

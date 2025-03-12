@@ -63,7 +63,8 @@ const usePackery = ({
             }
         };
     }, [containerRef, isEnabled, items.length, layoutSettings.imageSpacing,
-        layoutSettings.sorting.direction, layoutSettings.forceImagesPerRow.count]);
+        layoutSettings.sorting.direction, layoutSettings.forceImagesPerRow.count,
+        layoutSettings.forceImagesPerRow.enabled]);
 
     // Update layout when items or relevant settings change
     useEffect(() => {
