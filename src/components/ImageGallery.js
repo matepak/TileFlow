@@ -67,11 +67,12 @@ const ImageGallery = () => {
     useCleanupObjectUrls(images);
 
     // Layout Settings Handlers
-    const handleRowHeightChange = (value) => {
+    const onRowHeightChange = (value) => {
         setLayoutSettings(prev => ({
             ...prev,
             rowHeight: value
         }));
+    };
     };
 
     const handleImageSpacingChange = (value) => {
