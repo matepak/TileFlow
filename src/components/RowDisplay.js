@@ -1,7 +1,9 @@
 import React from 'react';
 import { hexToRgba } from '../utils/imageUtils';
+import useRow from '../hooks/useRow';
+import useContainerWidth from '../hooks/useContainerWidth';
 
-const GalleryDisplay = ({
+const RowDisplay = ({
     images,
     imagesByRow,
     layoutSettings,
@@ -9,8 +11,22 @@ const GalleryDisplay = ({
     galleryRef,
     fileInputRef,
     updateImageLabel,
-    removeImage
+    removeImage,
+    setImages,
+    sortImagesCallback
 }) => {
+    const containerWidth = useContainerWidth(containerRef, layoutSettings.containerPadding);
+
+    // Use the row layout hook
+    useRow(
+        images,
+        setImages,
+        containerWidth,
+        layoutSettings,
+        sortImagesCallback,
+        false // Never disable since this is the row display component
+    );
+
     return (
         <div
             ref={containerRef}
@@ -115,4 +131,4 @@ const GalleryDisplay = ({
     );
 };
 
-export default GalleryDisplay; 
+export default RowDisplay; 

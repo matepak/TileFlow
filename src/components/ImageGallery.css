@@ -40,32 +40,33 @@
 /* Tab Navigation */
 .tab-navigation {
     display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px;
     border-bottom: 1px solid #ddd;
-    margin-bottom: 1rem;
-    width: 100%;
-    max-width: 64rem;
+    padding-bottom: 5px;
 }
 
 .tab-button {
-    padding: 0.5rem 1rem;
-    background: none;
-    border: none;
+    padding: 8px 16px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px 4px 0 0;
     cursor: pointer;
-    color: #666;
-    font-size: 0.875rem;
-    transition: color 0.2s, border-color 0.2s;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    outline: none;
 }
 
 .tab-button.active {
-    border-bottom: 2px solid #3b82f6;
-    color: #3b82f6;
-    font-weight: 500;
+    background-color: #4a90e2;
+    color: white;
+    border-color: #3a80d2;
 }
 
 .tab-button:hover:not(.active) {
-    color: #333;
+    background-color: #e0e0e0;
 }
-
 
 .settings-panel {
     width: 100%;
@@ -161,9 +162,20 @@
 /* Main Controls */
 .main-controls {
     display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.controls-section {
+    display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 10px;
+    align-items: center;
 }
 
 .file-input {
@@ -492,4 +504,369 @@
 .export-button-container button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+/* Packery specific styles */
+.packery-gallery {
+    overflow: hidden;
+}
+
+.packery-container {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.packery-container.show-items {
+    opacity: 1;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 25%;
+    /* Default width for 4 columns */
+}
+
+.gallery-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+}
+
+/* Make sure images fill their containers */
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Animation for when items are being arranged */
+.gallery-item.is-positioning-post-drag {
+    background: rgba(142, 192, 233, 0.5);
+    z-index: 2;
+}
+
+.gallery-item.is-dragging {
+    cursor: move;
+    z-index: 3;
+}
+
+/* Improve animation performance */
+.gallery-image {
+    will-change: transform;
+}
+
+/* Packery placeholder while dragging */
+.packery-drop-placeholder {
+    border: 3px dashed #ccc;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Update drag mode toggle styles */
+.drag-mode-toggle {
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.drag-toggle-button {
+    padding: 8px 16px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 150px;
+}
+
+.drag-toggle-button.active {
+    background-color: #4a90e2;
+    color: white;
+    border-color: #3a80d2;
+}
+
+.drag-instructions {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+}
+
+.gallery-item.draggable {
+    cursor: move;
+    cursor: grab;
+}
+
+.gallery-item.draggable:active {
+    cursor: grabbing;
+}
+
+.gallery-item.draggable::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 24 24'%3E%3Cpath d='M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5));
+    z-index: 10;
+}
+
+/* Add styles for the sidebar layout */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.app-header {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #4a90e2;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.app-logo {
+    height: 40px;
+    width: auto;
+}
+
+.app-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+    padding: 20px;
+    gap: 20px;
+}
+
+.sidebar {
+    width: 300px;
+    flex-shrink: 0;
+}
+
+/* Loading overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #4a90e2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-text {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #333;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Add styles for the packery gallery wrapper */
+.packery-gallery-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Grid Layout Styles */
+.grid-sizer {
+    width: 25%;
+    height: 200px;
+}
+
+.gutter-sizer {
+    width: 10px;
+}
+
+.packery-container {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.gallery-item {
+    width: calc(25% - 10px);
+    /* Matches grid-sizer width minus gutter */
+    margin-bottom: 10px;
+}
+
+/* Grid Layout Settings Panel Styles */
+.grid-settings {
+    background-color: #f8f8f8;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.setting-item {
+    margin-bottom: 15px;
+}
+
+.setting-item:last-child {
+    margin-bottom: 0;
+}
+
+.select-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    color: #333;
+}
+
+.range-slider {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.setting-value {
+    display: inline-block;
+    min-width: 45px;
+    text-align: right;
+    margin-left: 10px;
+    color: #666;
+    font-size: 14px;
+}
+
+.settings-info {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f0f7ff;
+    border-left: 4px solid #4a90e2;
+    border-radius: 4px;
+}
+
+.info-text {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 14px;
+}
+
+.tips-list {
+    margin: 0;
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+.tips-list li {
+    margin-bottom: 5px;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.setting-divider {
+    height: 1px;
+    background-color: #ddd;
+    margin: 20px 0;
+}
+
+/* Responsive grid sizes */
+@media (max-width: 1200px) {
+
+    .grid-sizer,
+    .gallery-item {
+        width: 33.333%;
+    }
+
+    .gallery-item {
+        width: calc(33.333% - 10px);
+    }
+}
+
+@media (max-width: 768px) {
+
+    .grid-sizer,
+    .gallery-item {
+        width: 50%;
+    }
+
+    .gallery-item {
+        width: calc(50% - 10px);
+    }
+}
+
+@media (max-width: 480px) {
+
+    .grid-sizer,
+    .gallery-item {
+        width: 100%;
+    }
+
+    .gallery-item {
+        width: calc(100% - 10px);
+    }
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.number-input {
+    width: 60px;
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
