@@ -522,7 +522,8 @@
 
 .gallery-item {
     position: relative;
-    overflow: hidden;
+    overflow: visible !important;
+    /* Override any overflow hidden that Packery might set */
     box-sizing: border-box;
     margin-bottom: 8px;
     border-radius: 4px;
@@ -869,4 +870,16 @@
     padding: 4px 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+.remove-image,
+.image-info {
+    position: absolute;
+    z-index: 2;
+}
+
+.packery-gallery .gallery-item:hover .remove-image,
+.packery-gallery .gallery-item:hover .image-info {
+    opacity: 1;
+    visibility: visible;
 }

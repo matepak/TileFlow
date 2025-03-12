@@ -117,7 +117,8 @@ const PackeryDisplay = ({
                                 style={{
                                     width: settings.forceImagesPerRow?.enabled
                                         ? `${100 / (settings.forceImagesPerRow?.count || 4)}%`
-                                        : '25%'  // default to 4 columns
+                                        : '25%',  // default to 4 columns
+                                    position: 'relative'  // Ensure proper stacking context
                                 }}
                             >
                                 <img
@@ -151,6 +152,7 @@ const PackeryDisplay = ({
                                         className="remove-image"
                                         onClick={removeImage}
                                         data-id={image.id}
+                                        style={{ zIndex: 2 }}  // Ensure button is above image
                                     >
                                         <svg className="remove-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -160,7 +162,10 @@ const PackeryDisplay = ({
 
                                 {/* Hover Info - only show if not in drag mode */}
                                 {!enableDrag && (
-                                    <div className="image-info">
+                                    <div
+                                        className="image-info"
+                                        style={{ zIndex: 2 }}  // Ensure info is above image
+                                    >
                                         <div className="info-filename">{image.fileName}</div>
                                         <div className="info-dimensions">{image.originalWidth}×{image.originalHeight}</div>
 
