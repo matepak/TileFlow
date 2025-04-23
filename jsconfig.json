@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@landing/*": [
+                "./public/landing/*"
+            ]
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "build"
+    ]
+}

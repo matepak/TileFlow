@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TileFlow - Image Gallery Layout Tool</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="#">TileFlow</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#usage">Usage</a></li>
+                <li><a href="#getting-started">Getting Started</a></li>
+                <li><a href="#technical">Technical</a></li>
+                <li><a href="https://github.com/matepak/TileFlow" class="github-link"><i class="fab fa-github"></i>
+                        GitHub</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Create Perfect Image Galleries with TileFlow</h1>
+                <p>A powerful tool for creating beautifully tiled image layouts with customizable rows, spacing, and
+                    export options.</p>
+                <div class="cta-buttons">
+                    <a href="/tile" class="btn btn-primary">Try TileFlow Now</a>
+                    <a href="#features" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="tileflow.png" alt="TileFlow Application Interface">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Powerful Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-th"></i>
+                    </div>
+                    <h3>Row-Based Layout Engine</h3>
+                    <p>Create image grids with customizable row heights and spacing for perfect gallery presentation.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Smart Layout Options</h3>
+                    <p>Automatic layout calculation with options for last row behavior to match your design needs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <h3>Image Management</h3>
+                    <p>Easily upload, arrange, and remove images with an intuitive drag-and-drop interface.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <h3>Custom Labels</h3>
+                    <p>Add and edit labels for each image with customizable styling options.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-sort"></i>
+                    </div>
+                    <h3>Flexible Sorting</h3>
+                    <p>Sort images by label, filename, or image size with ascending or descending options.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>Advanced Export</h3>
+                    <p>Save your entire gallery as a single high-quality image with adjustable DPI for any use case.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Usage Section -->
+    <section id="usage" class="usage">
+        <div class="container">
+            <h2 class="section-title">Customize Your Gallery</h2>
+
+            <div class="tabs">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="layout">Layout Settings</button>
+                    <button class="tab-btn" data-tab="labels">Label Settings</button>
+                    <button class="tab-btn" data-tab="sorting">Sorting Options</button>
+                    <button class="tab-btn" data-tab="export">Export Capabilities</button>
+                </div>
+
+                <div class="tab-content">
+                    <div id="layout" class="tab-pane active">
+                        <div class="content-with-image">
+                            <div class="content-text">
+                                <h3>Fine-Tune Your Layout</h3>
+                                <ul>
+                                    <li><strong>Row Height:</strong> Adjust the target height for image rows</li>
+                                    <li><strong>Images Per Row:</strong> Force a specific number of images in each row
+                                    </li>
+                                    <li><strong>Spacing Controls:</strong> Set precise spacing between images and rows
+                                    </li>
+                                    <li><strong>Last Row Behavior:</strong> Choose how the final row should be displayed
+                                    </li>
+                                    <li><strong>Upscaling Prevention:</strong> Maintain image quality by preventing
+                                        image upscaling</li>
+                                </ul>
+                            </div>
+                            <div class="content-image">
+                                <img src="layout-settings.jpg" alt="Layout Settings Interface">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="labels" class="tab-pane">
+                        <div class="content-with-image">
+                            <div class="content-text">
+                                <h3>Customizable Labels</h3>
+                                <ul>
+                                    <li><strong>Toggle Labels:</strong> Show or hide image labels</li>
+                                    <li><strong>Font Customization:</strong> Adjust font size and color</li>
+                                    <li><strong>Background Control:</strong> Change label background color and opacity
+                                    </li>
+                                    <li><strong>Spacing Adjustment:</strong> Fine-tune label padding</li>
+                                </ul>
+                            </div>
+                            <div class="content-image">
+                                <img src="label-settings.jpg" alt="Label Settings Interface">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="sorting" class="tab-pane">
+                        <div class="content-with-image">
+                            <div class="content-text">
+                                <h3>Organize Your Gallery</h3>
+                                <ul>
+                                    <li><strong>Label Name:</strong> Alphabetical sorting by custom labels</li>
+                                    <li><strong>File Name:</strong> Sort by original filenames</li>
+                                    <li><strong>Image Size:</strong> Arrange by image dimensions</li>
+                                    <li><strong>Sort Direction:</strong> Toggle between ascending and descending order
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="content-image">
+                                <img src="sorting-options.jpg" alt="Sorting Options Interface">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="export" class="tab-pane">
+                        <div class="content-with-image">
+                            <div class="content-text">
+                                <h3>Professional Export Options</h3>
+                                <ul>
+                                    <li><strong>Resolution Control:</strong> Adjust DPI settings for different use cases
+                                    </li>
+                                    <li><strong>Presets:</strong> Quick settings for web, basic print, quality print,
+                                        and professional printing</li>
+                                    <li><strong>Configuration Save:</strong> Save your layout settings for future use
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="content-image">
+                                <img src="export-options.jpg" alt="Export Options Interface">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Getting Started Section -->
+    <section id="getting-started" class="getting-started">
+        <div class="container">
+            <h2 class="section-title">Getting Started</h2>
+            <div class="columns-2">
+                <div class="col">
+                    <h3>Try It Online</h3>
+                    <p>Experience TileFlow instantly without any installation:</p>
+                    <a href="/tile" class="btn btn-primary">Launch TileFlow</a>
+                </div>
+                <div class="col">
+                    <h3>Installation</h3>
+                    <div class="code-block">
+                        <pre><code># Clone the repository
+git clone https://github.com/yourusername/tileflow.git
+
+# Navigate to the project directory
+cd tileflow
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm start</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Section -->
+    <section id="technical" class="technical">
+        <div class="container">
+            <h2 class="section-title">Technical Details</h2>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <img src="react-icon.svg" alt="React">
+                    <span>React</span>
+                </div>
+                <div class="tech-item">
+                    <img src="css-icon.svg" alt="CSS">
+                    <span>CSS</span>
+                </div>
+                <div class="tech-item">
+                    <img src="canvas-icon.svg" alt="Canvas API">
+                    <span>Canvas API</span>
+                </div>
+                <div class="tech-item">
+                    <img src="packery-icon.svg" alt="Packery">
+                    <span>Packery</span>
+                </div>
+                <div class="tech-item">
+                    <img src="draggabilly-icon.svg" alt="Draggabilly">
+                    <span>Draggabilly</span>
+                </div>
+            </div>
+            <div class="contribution">
+                <h3>Want to Contribute?</h3>
+                <p>TileFlow is open source! We welcome contributions from the community.</p>
+                <a href="https://github.com/matepak/TileFlow" class="btn btn-secondary">
+                    <i class="fab fa-github"></i> Fork on GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Create Beautiful Image Galleries?</h2>
+            <a href="/tile" class="btn btn-primary btn-large">Try TileFlow Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>TileFlow</h3>
+                    <p>Beautiful Image Gallery Layout Tool</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#usage">Usage</a></li>
+                        <li><a href="#getting-started">Getting Started</a></li>
+                        <li><a href="#technical">Technical Details</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://github.com/matepak/TileFlow">GitHub Repository</a></li>
+                        <li><a href="https://github.com/matepak/TileFlow/issues">Issue Tracker</a></li>
+                        <li><a href="https://github.com/matepak/TileFlow/blob/main/LICENSE">License</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 TileFlow. All rights reserved. Licensed under the MIT License.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+
+</html>
