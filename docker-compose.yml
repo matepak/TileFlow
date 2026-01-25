@@ -1,0 +1,16 @@
+services:
+  tileflow:
+    build: .
+    container_name: tileflow
+    restart: unless-stopped
+    networks:
+      - traefik_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tileflow.rule=Host(`tiling.webgrove.pl`)"
+      - "traefik.http.routers.tileflow.entrypoints=web"
+      - "traefik.http.services.tileflow.loadbalancer.server.port=3000"
+
+networks:
+  traefik_default:
+    external: true
